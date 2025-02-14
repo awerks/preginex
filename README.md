@@ -1,2 +1,2 @@
-# se_project_1000
+# se_project_1000_frontend
 the project for software engineering
