@@ -23,7 +23,7 @@ if not app.debug:
     formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
     file_handler.setFormatter(formatter)
 
-    app.logger.addHandler(file_handler)
+    logger.addHandler(file_handler)
 
 
 @app.route("/")

@@ -1,19 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}Register{% endblock %}
 
-
 {% block content %}
 <div class="login-container">
     <h2>Register</h2>
-    <form method="POST" action="{{ url_for('auth.register') }}">
+    <form method="POST" action="{{ url_for('auth.register') }}" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="username">Username or Email</label>
             <input type="text" id="username" name="username" required placeholder="Enter your username">
         </div>
+
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required placeholder="Enter your password">
+            <input type="password" id="password" name="password" required minlength="8"
+                placeholder="Enter your password">
         </div>
+
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required minlength="8"
+                placeholder="Confirm your password">
+            <small id="password-error" style="color: red; margin-top: 0.5rem; display: none;">Passwords do not
+                match</small>
+        </div>
+
         <div class="form-group">
             <label for="role_name">Role</label>
             <select name="role_name" id="role_name">
@@ -22,12 +32,29 @@
                 <option value="Worker">Worker</option>
             </select>
         </div>
+
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
+
     {% if error %}
     <p style="color: red;">{{ error }}</p>
     {% endif %}
-
 </div>
 
+<script>
+    function validateForm() {
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirm_password").value;
+        let passwordError = document.getElementById("password-error");
+
+        if (password !== confirmPassword) {
+            passwordError.style.display = "block";
+            return false;
+        } else {
+            passwordError.style.display = "none";
+        }
+        return true;
+    }
+
+</script>
 {% endblock %}
