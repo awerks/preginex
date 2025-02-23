@@ -53,8 +53,20 @@
         } else {
             passwordError.style.display = "none";
         }
+
         return true;
     }
+    //real-time validation
+    document.getElementById("confirm_password").addEventListener("input", function () {
+        let password = document.getElementById("password").value;
+        let confirmPassword = this.value;
+        let passwordError = document.getElementById("password-error");
 
+        if (password !== confirmPassword) {
+            passwordError.style.display = "block";
+        } else {
+            passwordError.style.display = "none";
+        }
+    });
 </script>
 {% endblock %}

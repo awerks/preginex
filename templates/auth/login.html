@@ -13,7 +13,11 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required placeholder="Enter your password">
         </div>
-        <button type="submit" class="btn btn-primary">Sign In</button>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary sign-in-btn">Sign In</button>
+            <a href="{{ url_for('auth.register') }}" class="register-link">Register</a>
+        </div>
+
     </form>
     {% if error %}
     <p style="color: red; margin-bottom: 1rem;">{{ error }}</p>
