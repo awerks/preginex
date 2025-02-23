@@ -317,6 +317,7 @@ footer {
 }
 
 .sign-in-btn {
+    width: 7.5rem;
     grid-column: 2;
     justify-self: right;
 }

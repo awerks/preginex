@@ -51,6 +51,17 @@
     </div>
     <button type="submit" class="btn btn-primary">Create Project</button>
 </form>
+<script>
+    document.querySelector('.project-form').addEventListener('submit', function (event) {
+        var startDate = new Date(document.getElementById('start_date').value);
+        var endDate = new Date(document.getElementById('end_date').value);
+        if (startDate > endDate) {
+            event.preventDefault();
+            alert('End date must be after start date.');
+        }
+    });
+</script>
+
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
