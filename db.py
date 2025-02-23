@@ -34,5 +34,5 @@ def close_db():
 
     db = g.pop("db", None)
     if db is not None:
+        logger.info("Closed the database connection.")
         db.close()
-    logger.info("Closed the database connection.")

@@ -7,8 +7,7 @@ from db import close_db, get_db
 from psycopg2.extras import RealDictCursor
 from flask_dance.contrib.google import google
 from logging.handlers import RotatingFileHandler
-
-logger = logging.getLogger(__name__)
+from sys import stdout
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev")
@@ -16,14 +15,18 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev")
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(google_bp, url_prefix="/login")
 
-if not app.debug:
-    file_handler = RotatingFileHandler("access.log", maxBytes=10_485_760, backupCount=5)
-    file_handler.setLevel(logging.INFO)
-
-    formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
-    file_handler.setFormatter(formatter)
-
-    logger.addHandler(file_handler)
+# if not app.debug:
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%d-%m-%Y %H:%M:%S",
+    handlers=[
+        logging.FileHandler("access.log"),
+        logging.StreamHandler(stdout),
+    ],
+)
+logger.info("Logging setup complete.")
 
 
 @app.route("/")
@@ -86,7 +89,7 @@ def privacy():
 @app.before_request
 def log_ip():
     ip_address = request.remote_addr
-    app.logger.info(f"Incoming request from IP: {ip_address}, URL: {request.url}")
+    logger.info(f"Incoming request from IP: {ip_address}, URL: {request.url}")
 
 
 @app.route("/create_project", methods=["POST"])
