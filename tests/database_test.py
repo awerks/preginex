@@ -8,7 +8,7 @@ try:
     print("Connected to the database successfully!")
 
     cursor = conn.cursor()
-    schema_path = os.path.join(os.path.dirname(__file__), "..", "schema.sql")
+    schema_path = "database/schema.sql"
     with open(schema_path, "r") as f:
         print("Executing schema.sql...")
         try:

@@ -11,6 +11,12 @@
 
 if you sign in with google, you'll have worker's access rights for now.
 
+## Database UML diagram:
+
+![Database UML diagram](database/uml_diagram.png)
+
+Also check out the docs for this database [here](https://dbdocs.io/awerks/software_project)
+
 ## Getting started with the project
 
 ### Clone the repository
