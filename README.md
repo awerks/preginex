@@ -50,7 +50,7 @@ The server can be accessed at [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
 
 ## P.S
 
-Add your pictures to static/images in the format of `<team-memberx>.jpg`
+Add your pictures to static/images in the format of `<team-memberX>.jpg`
 
 ## Deployment
 
