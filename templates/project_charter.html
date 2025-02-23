@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if not projects %}
+<h2>No Current Projects!</h2>
+{% else %}
+<h2>Current Projects</h2>
+<div class="table-responsive">
+
+    <table class="projects-table">
+        <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.project_name }}</td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.start_date }}</td>
+                <td>{{ project.end_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<h2>Create Project (Project Charter)</h2>
+
+<form method="POST" action="{{ url_for('create_project') }}" class="project-form">
+    <div class="form-group">
+        <label for="project_name">Project Name:</label>
+        <input type="text" id="project_name" name="project_name" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required>
+    </div>
+    <div class="form-group">
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Project</button>
+</form>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<script>alert("{{ message }}")</script>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% endblock %}

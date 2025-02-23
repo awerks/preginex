@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create a Task</h2>
+<form method="POST">
+    <label>Task Name:</label><br>
+    <input type="text" name="task_name" required><br><br>
+    <label>Description:</label><br>
+    <textarea name="task_description"></textarea required><br><br>
+    <label>Deadline:</label><br>
+    <input type="date" name="deadline" required><br><br>
+
+    <label>Project:</label><br>
+    <select name="project_id">
+        {% for p in projects %}
+        <option value="{{ p.project_id }}">{{ p.project_name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Assign To (Worker):</label><br>
+    <select name="assigned_to">
+        {% for w in workers %}
+        <option value="{{ w.user_id }}">{{ w.username }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Create Task</button>
+</form>
+{% endblock %}

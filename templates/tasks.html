@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+{% if session.get('role_name') == 'Worker' %}
+<h2>Your Tasks</h2>
+<div class="table-responsive">
+    <table class="tasks-table">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Description</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.task_name }}</td>
+                <td>{{ task.task_description }}</td>
+                <td>{{ task.deadline.strftime('%Y-%m-%d') if task.deadline else '' }}</td>
+                <td>{{ task.status }}</td>
+                <td>
+                    {% if session.get('role_name') in ['Admin','Manager'] and task.status == 'Pending' %}
+                    <form method="POST" action="{{ url_for('approve_task', task_id=task.task_id) }}">
+                        <button type="submit" class="btn btn-primary">Approve</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if session.get('role_name') in ['Admin','Manager'] %}
+<h2>Assign New Tasks</h2>
+<form method="POST" action="{{ url_for('create_task') }}" class="task-form">
+    <label for="task_name">Task Name:</label>
+    <input type="text" id="task_name" name="task_name" required>
+
+    <label for="task_description">Description:</label>
+    <textarea id="task_description" name="task_description" required></textarea>
+
+    <label for="deadline">Deadline:</label>
+    <input type="date" id="deadline" name="deadline" required>
+
+    <label for="project_id">Project:</label>
+    <select id="project_id" name="project_id">
+        {% for p in projects %}
+        <option value="{{ p.project_id }}">{{ p.project_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="assigned_to">Assign To (Worker):</label>
+    <select id="assigned_to" name="assigned_to">
+        {% for w in workers %}
+        <option value="{{ w.user_id }}">{{ w.username }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary">Create New Task</button>
+</form>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<script>alert("{{ message }}")</script>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% endif %}
+{% endblock %}
