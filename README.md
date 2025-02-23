@@ -1,8 +1,8 @@
 # Software engineering project
 
-## Link to the demo website:
+## Link to the website:
 
-[softwareproject.up.railway.app](https://softwareproject.up.railway.app/)
+[preginex.fun](https://preginex.fun)
 
 ## For admin rights, use the following credentials:
 
