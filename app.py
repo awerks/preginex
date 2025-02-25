@@ -166,6 +166,42 @@ def create_task():
         return redirect(url_for("tasks"))
 
 
+@app.route("/api/projects", methods=["GET"])
+@login_required
+def get_projects():
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT json_agg(
+                json_build_object(
+                    'project_id', project_id,
+                    'project_name', project_name,
+                    'description', description,
+                    'start', start_date,
+                    'end', end_date,
+                    'manager', users.username,
+                    'tasks', (
+                        SELECT json_agg(
+                            json_build_object(
+                                'task_id', task_id,
+                                'task_name', task_name,
+                                'description', task_description,
+                                'end', deadline,
+                                'status', status
+                            )
+                        ) FROM tasks WHERE project_id = projects.project_id
+                    )
+    
+                )
+            ) FROM projects JOIN users ON projects.manager_id = users.user_id
+        """
+        )
+        projects = cursor.fetchone()[0]
+
+    return jsonify(projects if projects else [])
+
+
 @app.route("/api/tasks", methods=["GET"])
 @login_required
 def get_tasks():
