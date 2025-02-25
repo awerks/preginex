@@ -17,7 +17,7 @@
     <meta property="og:image" content="https://preginex.fun/static/images/favicon.ico">
     <meta property="og:url" content="https://preginex.fun">
     <meta property="og:type" content="website">
-
+    <meta name="author" content="awerks">
 </head>
 
 <body>
@@ -78,7 +78,7 @@
                         <a href="#" class="nav-link profile-trigger">
                             <img src="{{ session.get('profile_pic', url_for('static', filename='images/placeholder.jpg')) }}"
                                 alt="Profile Picture" class="profile-pic">
-                            <span class="profile-name">{{ session.get('name', 'User') }}</span>
+                            <span class="profile-name">{{ session.get('name', session.get('username', 'User')) }}</span>
                             <i class="fas fa-caret-down"></i>
                         </a>
                         <div class="dropdown-content">
@@ -133,6 +133,7 @@
             document.body.classList.toggle('menu-open', navMenu.classList.contains('nav-menu_visible'));
         });
     </script>
+
 </body>
 
 </html>

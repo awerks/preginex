@@ -1,7 +1,7 @@
 import logging
 import os
 from datetime import datetime
-from flask import Flask, render_template, redirect, url_for, session, request, flash
+from flask import Flask, jsonify, render_template, redirect, url_for, session, request, flash
 from auth import auth_bp, login_required, google_bp
 from db import close_db, get_db
 from psycopg2.extras import RealDictCursor
@@ -166,6 +166,30 @@ def create_task():
         return redirect(url_for("tasks"))
 
 
+@app.route("/api/tasks", methods=["GET"])
+@login_required
+def get_tasks():
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT json_agg(
+                json_build_object(
+                    'task_id', task_id,
+                    'task_name', task_name,
+                    'description', task_description,
+                    'start', deadline,
+                    'project_id', project_id,
+                    'status', status
+                )
+            ) FROM tasks WHERE assigned_to = %s
+        """,
+            (session["user_id"],),
+        )
+        result = cursor.fetchone()[0]
+    return jsonify(result if result else [])
+
+
 @app.route("/events", methods=["GET"])
 @login_required
 def events():
@@ -223,6 +247,32 @@ def approve_event(event_id):
     logger.info("Event approved successfully")
     flash("Event approved successfully!", "success")
     return redirect(url_for("events"))
+
+
+@app.route("/api/events", methods=["GET"])
+@login_required
+def get_events():
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT json_agg(
+                json_build_object(
+                    'event_id', e.event_id,
+                    'title', e.event_name,
+                    'start', e.event_date,
+                    'description', e.event_description,
+                    'requested_by_username', r.username,
+                    'approved_by_username', a.username
+                )
+            ) FROM events e
+            JOIN users r ON e.requested_by = r.user_id
+            LEFT JOIN users a ON e.approved_by = a.user_id;
+            """
+        )
+        result = cursor.fetchone()[0]
+
+    return jsonify(result if result else [])
 
 
 @app.route("/about", methods=["GET"])

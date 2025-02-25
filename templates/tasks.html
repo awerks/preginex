@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-{% if session.get('role_name') == 'Worker' %}
-<h2>Your Tasks</h2>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<h1 class="tasks-title">Your Tasks</h1>
+
+<div id="taskCalendar"></div>
+
+<!-- {% if session.get('role_name') == 'Worker' %}
+
 <div class="table-responsive">
     <table class="tasks-table">
         <thead>
@@ -32,7 +40,7 @@
         </tbody>
     </table>
 </div>
-{% endif %}
+{% endif %} -->
 
 {% if session.get('role_name') in ['Admin','Manager'] %}
 <h2>Assign New Tasks</h2>
@@ -71,4 +79,57 @@
 {% endif %}
 {% endwith %}
 {% endif %}
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var taskCalendarEl = document.getElementById("taskCalendar");
+
+        var isMobile = window.innerWidth < 768;
+        var defaultView = isMobile ? 'listWeek' : 'dayGridMonth';
+
+        var headerConfig = isMobile
+            ? { left: 'prev,next', right: 'today' }
+            : { left: 'title', right: 'prev,next,dayGridMonth,timeGridWeek,timeGridDay,listWeek' };
+        var taskCalendar = new FullCalendar.Calendar(taskCalendarEl, {
+            initialView: defaultView,
+            headerToolbar: headerConfig,
+            height: "auto",
+            events: "/api/tasks",
+
+            eventDidMount: function (info) {
+                if (info.event.extendedProps.description) {
+                    tippy(info.el, {
+                        content: "Description: " + info.event.extendedProps.description,
+                        placement: 'top',
+                        arrow: true
+                    });
+                }
+            },
+            eventContent: function (arg) {
+                let title = document.createElement("div");
+                title.classList.add("fc-event-title");
+                title.innerText = arg.event.title;
+
+                let assignedTo = document.createElement("div");
+                assignedTo.classList.add("fc-event-requestedby");
+                assignedTo.innerText = "Assigned to you";
+
+                let status = document.createElement("div");
+                status.classList.add("fc-event-approvedby");
+                status.innerText = "Status: " + arg.event.extendedProps.status;
+
+                return { domNodes: [title, assignedTo, status] };
+            },
+            eventClick: function (info) {
+                if (info.event.extendedProps.description) {
+                    alert("Description: " + info.event.extendedProps.description);
+                }
+            }
+        });
+
+        taskCalendar.render();
+    });
+</script>
 {% endblock %}

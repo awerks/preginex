@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS tasks(
 );
 
 CREATE TABLE IF NOT EXISTS events(
-    event_id SERIAL PRIMARY KEY,
+    event_id SERIAL PRIMARY KEY,    
     event_name VARCHAR(100) NOT NULL,
     event_description TEXT,
     event_date DATE NOT NULL,
