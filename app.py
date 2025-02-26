@@ -212,7 +212,7 @@ def get_tasks():
             SELECT json_agg(
                 json_build_object(
                     'task_id', task_id,
-                    'task_name', task_name,
+                    'title', task_name,
                     'description', task_description,
                     'start', deadline,
                     'project_id', project_id,
@@ -223,6 +223,7 @@ def get_tasks():
             (session["user_id"],),
         )
         result = cursor.fetchone()[0]
+
     return jsonify(result if result else [])
 
 
@@ -307,7 +308,6 @@ def get_events():
             """
         )
         result = cursor.fetchone()[0]
-
     return jsonify(result if result else [])
 
 

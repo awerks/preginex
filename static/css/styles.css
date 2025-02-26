@@ -102,6 +102,7 @@ main.container {
     display: inline-block;
     vertical-align: middle;
     margin-right: 15px;
+    text-align: center;
 }
 
 .legend-color {
@@ -111,6 +112,7 @@ main.container {
     margin-right: 5px;
     border-radius: 3px;
 }
+
 
 .legend-project {
     background-color: #6200ee;
@@ -372,7 +374,9 @@ footer {
         display: block;
     }
 
-
+    .legend-item {
+        margin-top: 0.5rem;
+    }
 }
 
 .login-container {
