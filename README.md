@@ -14,13 +14,15 @@ if you sign in with google, you'll have worker's access rights for now.
 ## Database UML diagram:
 
 ![Database UML diagram](database/uml_diagram.png)
-Also check out the docs for this database [here](https://dbdocs.io/awerks/software_project)
+
+- PDF version [here](documentation/uml_diagram.pdf)
+- Also check out the docs for this database [here](https://dbdocs.io/awerks/software_project)
 
 ## Software requirements specification
 
 - [Google Docs](https://docs.google.com/document/d/1X-tgVVlT9g7ckr5P7b86xfEdJoca1BdAu7juNzQIzRM/edit?tab=t.0#heading=h.cvzov8a88e28)
 - [Overleaf](https://www.overleaf.com/8652163511gmrztypckwxz#f8ed04)
-- see compiled version in documentation/software_requirements.pdf
+- See compiled version [here](documentation/software_requirements.pdf)
 
 ## Getting started with the project
 
@@ -37,6 +39,14 @@ conda create -n se_project python=3.12 --file requirements.txt
 ```
 
 ## Set environment variables (provided in google docs)
+
+- `SMTP_SERVER`
+- `SMTP_PORT`
+- `SMTP_USERNAME`
+- `SMTP_PASSWORD`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `DATABASE_PUBLIC_URL`
 
 ```bash
 conda env config vars set myvar=value

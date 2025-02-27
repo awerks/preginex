@@ -7,7 +7,11 @@ CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(200) NOT NULL,
-    role_name role_enum NOT NULL
+    role_name role_enum NOT NULL,
+    first_name VARCHAR(50),
+    second_name VARCHAR(50),
+    birthday_date DATE,
+    email VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS projects(
@@ -53,4 +57,10 @@ CREATE TABLE IF NOT EXISTS schedules(
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (event_id) REFERENCES events(event_id),
     FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    token VARCHAR(36) PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    expires_at TIMESTAMP NOT NULL,
+    used BOOLEAN DEFAULT FALSE
 );

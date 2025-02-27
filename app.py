@@ -38,33 +38,67 @@ def index():
 
 @app.route("/google_login")
 def google_login():
-    resp = google.get("/oauth2/v2/userinfo")
+    # Request extended profile info from the People API including photos
+    resp = google.get(
+        "https://people.googleapis.com/v1/people/me", params={"personFields": "birthdays,names,emailAddresses,photos"}
+    )
+    print("HERE")
+    print(resp.json())
     if resp.ok:
         user_info = resp.json()
 
+        emails = user_info.get("emailAddresses", [])
+        email = emails[0].get("value") if emails else "None"
+        username = email.split("@")[0]
+        names = user_info.get("names", [])
+        if names:
+            first_name = names[0].get("givenName")
+            last_name = names[0].get("familyName")
+            display_name = names[0].get("displayName")
+        else:
+            first_name = None
+            last_name = None
+            display_name = None
+
+        birthdays = user_info.get("birthdays", [])
+        if birthdays and "date" in birthdays[0]:
+            bday = birthdays[0]["date"]
+            year = bday.get("year", 1970)
+            month = bday.get("month", 1)
+            day = bday.get("day", 1)
+            birthday_str = f"{year}-{month:02d}-{day:02d}"
+        else:
+            birthday_str = None
+        photos = user_info.get("photos", [])
+        if photos:
+            profile_pic = photos[0].get("url")
+        else:
+            profile_pic = None
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO users (username, password_hash, role_name) VALUES (%s, %s, %s) "
-                "ON CONFLICT (username) DO NOTHING RETURNING user_id",
-                (user_info.get("email"), "google_authorised", "Worker"),
+                """
+                INSERT INTO users (username, email, password_hash, role_name, first_name, second_name, birthday_date)
+                VALUES (%s, %s, %s, %s, %s, %s,%s)
+                ON CONFLICT (username) DO NOTHING RETURNING user_id
+                """,
+                (username, email, "google_authorised", "Worker", first_name, last_name, birthday_str),
             )
+
             user_row = cursor.fetchone()
             if user_row is not None:
                 user_id = user_row[0]
             else:
-                # if nothing was returned, the user already exists; select the user_id.
-                cursor.execute("SELECT user_id FROM users WHERE username = %s", (user_info.get("email"),))
+                cursor.execute("SELECT user_id FROM users WHERE username = %s", (email,))
                 user_id = cursor.fetchone()[0]
             db.commit()
+
             session.clear()
             session["user_id"] = user_id
-            session["username"] = user_info.get("email")
-            session["name"] = user_info.get("name")
-
-            session["profile_pic"] = user_info.get("picture")
+            session["username"] = email
+            session["name"] = display_name if display_name else email
+            session["profile_pic"] = profile_pic
             session["role_name"] = "Worker"
-
     return redirect(url_for("index"))
 
 

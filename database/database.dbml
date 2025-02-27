@@ -9,6 +9,10 @@ Table "users" {
   "username" varchar(50) [unique, not null]
   "password_hash" varchar(200) [not null]
   "role_name" role_enum [not null]
+  "first_name" varchar(50)
+  "second_name" varchar(50)
+  "birthday_date" date
+  "email" varchar(100) [unique, not null]
 }
 
 Table "projects" {
@@ -48,9 +52,18 @@ Table "schedules" {
   "description" text
 }
 
+Table "password_reset_tokens" {
+  "token" varchar(36) [pk, not null]
+  "user_id" int4
+  "expires_at_utc" timestamp [not null]
+  "used" bool [default: false]
+}
+
 Ref "events_approved_by_fkey":"users"."user_id" < "events"."approved_by"
 
 Ref "events_requested_by_fkey":"users"."user_id" < "events"."requested_by"
+
+Ref "password_reset_tokens_user_id_fkey":"users"."user_id" < "password_reset_tokens"."user_id"
 
 Ref "projects_manager_id_fkey":"users"."user_id" < "projects"."manager_id"
 

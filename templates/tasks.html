@@ -55,14 +55,14 @@
     <input type="date" id="deadline" name="deadline" required>
 
     <label for="project_id">Project:</label>
-    <select id="project_id" name="project_id">
+    <select id="project_id" name="project_id" required>
         {% for p in projects %}
         <option value="{{ p.project_id }}">{{ p.project_name }}</option>
         {% endfor %}
     </select>
 
     <label for="assigned_to">Assign To (Worker):</label>
-    <select id="assigned_to" name="assigned_to">
+    <select id="assigned_to" name="assigned_to" required>
         {% for w in workers %}
         <option value="{{ w.user_id }}">{{ w.username }}</option>
         {% endfor %}

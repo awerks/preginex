@@ -420,7 +420,8 @@ footer {
     justify-self: right;
 }
 
-.register-link {
+
+.forgot-link {
     grid-column: 3;
     justify-self: end;
     text-decoration: none;
