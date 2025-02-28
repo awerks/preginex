@@ -130,8 +130,7 @@ def register():
             db.commit()
             confirmation_token = str(uuid.uuid4())
             expires_at_utc = datetime.now(timezone.utc) + timedelta(days=1)
-            print("confirmation_token", confirmation_token)
-            print("expires_at_utc", expires_at_utc)
+
             cursor.execute(
                 """
                 INSERT INTO reset_confirm_tokens (token, user_id, expires_at_utc)
@@ -141,8 +140,7 @@ def register():
             )
             db.commit()
             confirm_link = url_for("auth.confirm_email", token=confirmation_token, _external=True)
-            print("Sending email")
-            print("confirm_link", confirm_link)
+
             send_email(
                 to_address=email,
                 subject="Confirm your email address",
@@ -170,21 +168,17 @@ def confirm_email(token):
     with db.cursor() as cursor:
         cursor.execute("SELECT user_id, expires_at_utc, used FROM reset_confirm_tokens WHERE token = %s", (token,))
         token_record = cursor.fetchone()
-        print(token_record)
         if token_record is None:
-            print("none")
             return render_template("confirm.html", error_message="Invalid confirmation link.")
         user_id, expires_at_utc, used = token_record
         if datetime.now(timezone.utc) > expires_at_utc.replace(tzinfo=timezone.utc):
             return render_template("confirm.html", error_message="Expired confirmation link.")
         if used:
-            # session["user_id"] = user_id
             return redirect(url_for("index"))
         cursor.execute("UPDATE users SET confirmed = TRUE WHERE user_id = %s", (user_id,))
         db.commit()
         cursor.execute("UPDATE reset_confirm_tokens SET used = TRUE WHERE token = %s", (token,))
         db.commit()
-        print("Email confirmed")
         # if "username" in session and session["username"] == email:
         session["confirmed"] = True
 
@@ -227,7 +221,6 @@ def check_confirmation():
     with db.cursor() as cursor:
         cursor.execute("SELECT confirmed FROM users WHERE user_id = %s", (user_id,))
         success = cursor.fetchone()[0]
-        print("success", success)
     return jsonify({"success": success})
 
 
@@ -259,16 +252,11 @@ def forgot_password():
                 db.commit()
 
                 reset_link = url_for("auth.reset_password", token=reset_token, _external=True)
-                print("Sending email")
-                print("reset_link", reset_link)
-                print("email_addr", email_addr)
-
                 send_email(
                     to_address=email_addr,
                     subject="Password Reset Request",
                     html_body=render_template("email/reset_password_email.html", reset_link=reset_link),
                 )
-                # print("template: ", render_template("email/reset_password_email.html", reset_link=reset_link))
                 return render_template(
                     "forgot_password.html",
                     success=True,
