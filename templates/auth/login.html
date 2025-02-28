@@ -20,7 +20,10 @@
         {% endif %}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary sign-in-btn">Sign In</button>
-            <a href="{{ url_for('auth.forgot_password') }}" class="forgot-link">Forgot password</a>
+            <a href="{{ url_for('auth.forgot_password') }}" class="forgot-link">
+                <span class="desktop-text">Forgot password</span>
+                <span class="mobile-text">Reset</span>
+            </a>
 
         </div>
     </form>

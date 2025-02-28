@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
     first_name VARCHAR(50) NOT NULL,
     second_name VARCHAR(50),
     birthday_date DATE,
-    email VARCHAR(100) UNIQUE NOT NULL
+    email VARCHAR(100) UNIQUE NOT NULL,
+    confirmed BOOLEAN DEFAULT FALSE,
 );
 
 CREATE TABLE IF NOT EXISTS projects(
@@ -58,7 +59,7 @@ CREATE TABLE IF NOT EXISTS schedules(
     FOREIGN KEY (event_id) REFERENCES events(event_id),
     FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
-CREATE TABLE IF NOT EXISTS password_reset_tokens (
+CREATE TABLE IF NOT EXISTS reset_confirm_tokens (
     token VARCHAR(36) PRIMARY KEY,
     user_id INTEGER REFERENCES users(user_id),
     expires_at TIMESTAMP NOT NULL,

@@ -11,10 +11,10 @@ from utils import send_email
 
 logger = logging.getLogger(__name__)
 # for local testing
-# if os.environ.get("FLASK_ENV", "development") == "development":
-logger.info("Setting up environment variables for local testing.")
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"
-os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "true"
+if os.environ.get("FLASK_ENV", "development") == "development":
+    logger.info("Setting up environment variables for local testing.")
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"
+    os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "true"
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates/auth")
 google_client_id = os.environ.get(
@@ -128,7 +128,26 @@ def register():
             )
             user_id = cursor.fetchone()[0]
             db.commit()
-
+            confirmation_token = str(uuid.uuid4())
+            expires_at_utc = datetime.now(timezone.utc) + timedelta(days=1)
+            print("confirmation_token", confirmation_token)
+            print("expires_at_utc", expires_at_utc)
+            cursor.execute(
+                """
+                INSERT INTO reset_confirm_tokens (token, user_id, expires_at_utc)
+                VALUES (%s, %s, %s)
+                """,
+                (confirmation_token, user_id, expires_at_utc),
+            )
+            db.commit()
+            confirm_link = url_for("auth.confirm_email", token=confirmation_token, _external=True)
+            print("Sending email")
+            print("confirm_link", confirm_link)
+            send_email(
+                to_address=email,
+                subject="Confirm your email address",
+                html_body=render_template("email/confirm_email.html", confirm_link=confirm_link),
+            )
             session.clear()
             session.update(
                 {
@@ -137,11 +156,79 @@ def register():
                     "role_name": role_name,
                     "name": f"{first_name} {second_name}",
                     "email": email,
+                    "confirmed": False,
                 }
             )
 
-        return redirect(url_for("index"))
+        return render_template("confirm.html")
     return render_template("register.html")
+
+
+@auth_bp.route("/confirm_email/<token>", methods=["GET"])
+def confirm_email(token):
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute("SELECT user_id, expires_at_utc, used FROM reset_confirm_tokens WHERE token = %s", (token,))
+        token_record = cursor.fetchone()
+        print(token_record)
+        if token_record is None:
+            print("none")
+            return render_template("confirm.html", error_message="Invalid confirmation link.")
+        user_id, expires_at_utc, used = token_record
+        if datetime.now(timezone.utc) > expires_at_utc.replace(tzinfo=timezone.utc):
+            return render_template("confirm.html", error_message="Expired confirmation link.")
+        if used:
+            # session["user_id"] = user_id
+            return redirect(url_for("index"))
+        cursor.execute("UPDATE users SET confirmed = TRUE WHERE user_id = %s", (user_id,))
+        db.commit()
+        cursor.execute("UPDATE reset_confirm_tokens SET used = TRUE WHERE token = %s", (token,))
+        db.commit()
+        print("Email confirmed")
+        # if "username" in session and session["username"] == email:
+        session["confirmed"] = True
+
+        return render_template("confirm.html", success=True)
+
+
+@auth_bp.route("/resend_confirmation", methods=["POST"])
+def resend_confirmation():
+    if "user_id" not in session or "email" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    email = session["email"]
+    confirmation_token = str(uuid.uuid4())
+    expires_at_utc = datetime.now(timezone.utc) + timedelta(days=1)
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute(
+            """
+            INSERT INTO reset_confirm_tokens (token, user_id, expires_at_utc)
+            VALUES (%s, %s, %s)
+            """,
+            (confirmation_token, user_id, expires_at_utc),
+        )
+        db.commit()
+        confirm_link = url_for("auth.confirm_email", token=confirmation_token, _external=True)
+        send_email(
+            to_address=email,
+            subject="Confirm your email address",
+            html_body=render_template("email/confirm_email.html", confirm_link=confirm_link),
+        )
+    return render_template("confirm.html")
+
+
+@auth_bp.route("/check_confirmation", methods=["GET"])
+def check_confirmation():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute("SELECT confirmed FROM users WHERE user_id = %s", (user_id,))
+        success = cursor.fetchone()[0]
+        print("success", success)
+    return jsonify({"success": success})
 
 
 @auth_bp.route("/forgot_password", methods=["GET", "POST"])
@@ -164,19 +251,24 @@ def forgot_password():
                 expires_at_utc = datetime.now(timezone.utc) + timedelta(hours=1)
                 cursor.execute(
                     """
-                    INSERT INTO password_reset_tokens (token, user_id, expires_at_utc)
+                    INSERT INTO reset_confirm_tokens (token, user_id, expires_at_utc)
                     VALUES (%s, %s, %s)
                     """,
                     (reset_token, user_id, expires_at_utc),
                 )
                 db.commit()
+
                 reset_link = url_for("auth.reset_password", token=reset_token, _external=True)
+                print("Sending email")
+                print("reset_link", reset_link)
+                print("email_addr", email_addr)
+
                 send_email(
                     to_address=email_addr,
                     subject="Password Reset Request",
-                    html_body=render_template("reset_password_email.html", reset_link=reset_link),
+                    html_body=render_template("email/reset_password_email.html", reset_link=reset_link),
                 )
-
+                # print("template: ", render_template("email/reset_password_email.html", reset_link=reset_link))
                 return render_template(
                     "forgot_password.html",
                     success=True,
@@ -190,7 +282,7 @@ def forgot_password():
 def reset_password(token):
     db = get_db()
     with db.cursor() as cursor:
-        cursor.execute("SELECT user_id, expires_at_utc, used FROM password_reset_tokens WHERE token = %s", (token,))
+        cursor.execute("SELECT user_id, expires_at_utc, used FROM reset_confirm_tokens WHERE token = %s", (token,))
         token_record = cursor.fetchone()
 
         if token_record is None:
@@ -217,7 +309,7 @@ def reset_password(token):
                 "UPDATE users SET password_hash = %s WHERE user_id = %s",
                 (generate_password_hash(new_password), user_id),
             )
-            cursor.execute("UPDATE password_reset_tokens SET used = TRUE WHERE token = %s", (token,))
+            cursor.execute("UPDATE reset_confirm_tokens SET used = TRUE WHERE token = %s", (token,))
             db.commit()
             return render_template("reset_password.html", success=True)
 

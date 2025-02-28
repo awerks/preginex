@@ -1,0 +1,79 @@
+Enum "role_enum" {
+  "Admin"
+  "Manager"
+  "Worker"
+}
+
+Table "users" {
+  "user_id" int4 [pk, not null, increment]
+  "username" varchar(50) [unique, not null]
+  "password_hash" varchar(200) [not null]
+  "role_name" role_enum [not null]
+  "first_name" varchar(50) [not null]
+  "second_name" varchar(50)
+  "birthday_date" date
+  "email" varchar(100) [unique, not null]
+  "confirmed" bool [default: false]
+}
+
+Table "projects" {
+  "project_id" int4 [pk, not null, increment]
+  "project_name" varchar(100) [not null]
+  "description" text
+  "start_date" date [not null]
+  "end_date" date
+  "manager_id" int4 [not null]
+}
+
+Table "tasks" {
+  "task_id" int4 [pk, not null, increment]
+  "task_name" varchar(100) [not null]
+  "task_description" text
+  "deadline" date
+  "status" varchar(50) [default: 'Pending']
+  "project_id" int4 [not null]
+  "assigned_to" int4 [not null]
+}
+
+Table "events" {
+  "event_id" int4 [pk, not null, increment]
+  "event_name" varchar(100) [not null]
+  "event_description" text
+  "event_date" date [not null]
+  "requested_by" int4 [not null]
+  "approved_by" int4
+}
+
+Table "schedules" {
+  "schedule_id" int4 [pk, not null, increment]
+  "user_id" int4 [not null]
+  "event_id" int4
+  "project_id" int4
+  "schedule_date" date [not null]
+  "description" text
+}
+
+Table "reset_confirm_tokens" {
+  "token" varchar(36) [pk, not null]
+  "user_id" int4
+  "expires_at_utc" timestamp [not null]
+  "used" bool [default: false]
+}
+
+Ref "events_approved_by_fkey":"users"."user_id" < "events"."approved_by"
+
+Ref "events_requested_by_fkey":"users"."user_id" < "events"."requested_by"
+
+Ref "projects_manager_id_fkey":"users"."user_id" < "projects"."manager_id"
+
+Ref "password_reset_tokens_user_id_fkey":"users"."user_id" < "reset_confirm_tokens"."user_id"
+
+Ref "schedules_event_id_fkey":"events"."event_id" < "schedules"."event_id"
+
+Ref "schedules_project_id_fkey":"projects"."project_id" < "schedules"."project_id"
+
+Ref "schedules_user_id_fkey":"users"."user_id" < "schedules"."user_id"
+
+Ref "tasks_assigned_to_fkey":"users"."user_id" < "tasks"."assigned_to"
+
+Ref "tasks_project_id_fkey":"projects"."project_id" < "tasks"."project_id"

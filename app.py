@@ -6,10 +6,11 @@ from auth import auth_bp, login_required, google_bp
 from db import close_db, get_db
 from psycopg2.extras import RealDictCursor
 from flask_dance.contrib.google import google
-from logging.handlers import RotatingFileHandler
 from sys import stdout
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev")
 
 app.register_blueprint(auth_bp, url_prefix="/auth")
@@ -85,11 +86,11 @@ def google_login():
             else:
                 cursor.execute(
                     """
-                    INSERT INTO users (username, email, password_hash, role_name, first_name, second_name, birthday_date)
-                    VALUES (%s, %s, %s, %s, %s, %s,%s)
+                    INSERT INTO users (username, email, password_hash, role_name, first_name, second_name, birthday_date, confirmed)
+                    VALUES (%s, %s, %s, %s, %s, %s,%s, %s)
                     ON CONFLICT (username) DO NOTHING RETURNING user_id
                     """,
-                    (username, email, "google_authorised", "Worker", first_name, last_name, birthday_str),
+                    (username, email, "google_authorised", "Worker", first_name, last_name, birthday_str, True),
                 )
                 db.commit()
                 user_id = cursor.fetchone()[0]
@@ -102,6 +103,7 @@ def google_login():
                     "name": display_name or email,
                     "profile_pic": profile_pic,
                     "role_name": role_name,
+                    "confirmed": True,
                 }
             )
 

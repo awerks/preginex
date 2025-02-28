@@ -329,6 +329,11 @@ footer {
     cursor: not-allowed;
 }
 
+.mobile-text {
+    display: none;
+}
+
+
 @media (max-width: 768px) {
 
     .nav-toggle {
@@ -376,6 +381,14 @@ footer {
 
     .legend-item {
         margin-top: 0.5rem;
+    }
+
+    .desktop-text {
+        display: none;
+    }
+
+    .mobile-text {
+        display: inline;
     }
 }
 
@@ -459,6 +472,24 @@ footer {
 
 .btn-primary:hover {
     background-color: #4e00bb;
+}
+
+.btn:disabled {
+    background-color: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
 }
 
 .btn-google {
