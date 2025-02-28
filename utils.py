@@ -1,16 +1,15 @@
+import smtplib
 import os
-import asyncio
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import aiosmtplib
 
 
-async def send_email(to_address, subject, html_body):
+def send_email(to_address, subject, html_body):
     smtp_server = os.environ.get("SMTP_SERVER")
     smtp_port = int(os.environ.get("SMTP_PORT"))
     smtp_username = os.environ.get("SMTP_USERNAME")
     smtp_password = os.environ.get("SMTP_PASSWORD")
-    from_address = smtp_username  
+    from_address = os.environ.get("SMTP_USERNAME")
 
     message = MIMEMultipart("alternative")
     message["Subject"] = subject
@@ -22,12 +21,6 @@ async def send_email(to_address, subject, html_body):
     message.attach(text_part)
     message.attach(html_part)
 
-    await aiosmtplib.send(
-        message,
-        hostname=smtp_server,
-        port=smtp_port,
-        username=smtp_username,
-        password=smtp_password,
-        use_tls=True,
-        timeout=10,
-    )
+    with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=5) as server:
+        server.login(smtp_username, smtp_password)
+        server.sendmail(from_address, to_address, message.as_string())

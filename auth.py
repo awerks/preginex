@@ -2,7 +2,6 @@ import functools
 import os
 import logging
 import uuid
-import asyncio
 from db import get_db
 from flask_dance.contrib.google import make_google_blueprint
 from flask import Blueprint, flash, render_template, request, redirect, url_for, session, jsonify
@@ -50,28 +49,33 @@ def login_required(view):
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username_or_email = request.form.get("username")
+        username_or_email = request.form.get("username").lower()
         password = request.form.get("password")
 
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute(
-                """
-                SELECT user_id, password_hash, role_name, username 
-                FROM users 
-                WHERE username = %s OR email = %s
-            """,
+                "SELECT user_id, first_name, second_name, email, password_hash, role_name, username FROM users WHERE username = %s OR email = %s",
                 (username_or_email, username_or_email),
             )
             user = cursor.fetchone()
-            if user and check_password_hash(user[1], password):
-                session.clear()
-                session["user_id"] = user[0]
-                session["role_name"] = user[2]
-                session["username"] = user[3]
-
-            else:
+            if not user:
                 return render_template("login.html", error="Invalid credentials")
+
+            user_id, first_name, second_name, email, password_hash, role_name, username = user
+            if not check_password_hash(password_hash, password):
+                return render_template("login.html", error="Invalid credentials")
+
+            session.clear()
+            session.update(
+                {
+                    "user_id": user_id,
+                    "name": f"{first_name} {second_name}" if second_name else first_name,
+                    "email": email,
+                    "role_name": role_name,
+                    "username": username,
+                }
+            )
 
         return redirect(url_for("index"))
     return render_template("login.html")
@@ -80,7 +84,7 @@ def login():
 @auth_bp.route("/check_username", methods=["POST"])
 def check_username():
     data = request.get_json()
-    username = data.get("username")
+    username = data.get("username").lower()
     db = get_db()
     with db.cursor() as cursor:
         cursor.execute("SELECT 1 FROM users WHERE username = %s", (username,))
@@ -88,10 +92,10 @@ def check_username():
     return jsonify({"exists": exists})
 
 
-@auth_bp.route("check_email", methods=["POST"])
+@auth_bp.route("/check_email", methods=["POST"])
 def check_email():
     data = request.get_json()
-    email = data.get("email")
+    email = data.get("email").lower()
     db = get_db()
     with db.cursor() as cursor:
         cursor.execute("SELECT 1 FROM users WHERE email = %s", (email,))
@@ -102,11 +106,11 @@ def check_email():
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        first_name = request.form.get("first_name")
-        second_name = request.form.get("second_name")
+        first_name = request.form.get("first_name").lower()
+        second_name = request.form.get("second_name").lower()
+        email = request.form.get("email").lower()
+        username = request.form.get("username").lower()
         birthday_date = request.form.get("birthday_date")
-        email = request.form.get("email")
-        username = request.form.get("username")
         password = request.form.get("password")
         role_name = request.form.get("role_name")
 
@@ -126,9 +130,15 @@ def register():
             db.commit()
 
             session.clear()
-            session["username"] = username
-            session["user_id"] = user_id
-            session["role_name"] = role_name
+            session.update(
+                {
+                    "username": username,
+                    "user_id": user_id,
+                    "role_name": role_name,
+                    "name": f"{first_name} {second_name}",
+                    "email": email,
+                }
+            )
 
         return redirect(url_for("index"))
     return render_template("register.html")
@@ -137,7 +147,7 @@ def register():
 @auth_bp.route("/forgot_password", methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
-        username_or_email = request.form.get("username")
+        username_or_email = request.form.get("username").lower()
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute(
@@ -161,13 +171,12 @@ def forgot_password():
                 )
                 db.commit()
                 reset_link = url_for("auth.reset_password", token=reset_token, _external=True)
-                asyncio.run(
-                    send_email(
-                        to_address=email_addr,
-                        subject="Password Reset Request",
-                        html_body=render_template("reset_password_email.html", reset_link=reset_link),
-                    )
+                send_email(
+                    to_address=email_addr,
+                    subject="Password Reset Request",
+                    html_body=render_template("reset_password_email.html", reset_link=reset_link),
                 )
+
                 return render_template(
                     "forgot_password.html",
                     success=True,

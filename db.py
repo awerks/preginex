@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def get_db():
 
     if "db" not in g:
-        logger.info("No existing database connection found. Creating a new one.")
+        # slogger.info("No existing database connection found. Creating a new one.")
         g.db = connect_db()
 
     return g.db
@@ -34,5 +34,5 @@ def close_db():
 
     db = g.pop("db", None)
     if db is not None:
-        logger.info("Closed the database connection.")
+        # logger.info("Closed the database connection.")
         db.close()

@@ -32,31 +32,30 @@ logger.info("Logging setup complete.")
 @app.route("/")
 @login_required
 def index():
+
     user = session.get("name") or session.get("username").split("@")[0]
     return render_template("index.html", user=user)
 
 
 @app.route("/google_login")
 def google_login():
-    # Request extended profile info from the People API including photos
     resp = google.get(
         "https://people.googleapis.com/v1/people/me", params={"personFields": "birthdays,names,emailAddresses,photos"}
     )
-    print("HERE")
-    print(resp.json())
     if resp.ok:
         user_info = resp.json()
 
         emails = user_info.get("emailAddresses", [])
-        email = emails[0].get("value") if emails else "None"
+        email = emails[0].get("value").lower() if emails else "None"
         username = email.split("@")[0]
         names = user_info.get("names", [])
+        role_name = "Worker"
         if names:
             first_name = names[0].get("givenName")
             last_name = names[0].get("familyName")
             display_name = names[0].get("displayName")
         else:
-            first_name = None
+            first_name = "None"
             last_name = None
             display_name = None
 
@@ -74,31 +73,38 @@ def google_login():
             profile_pic = photos[0].get("url")
         else:
             profile_pic = None
+
         db = get_db()
         with db.cursor() as cursor:
-            cursor.execute(
-                """
-                INSERT INTO users (username, email, password_hash, role_name, first_name, second_name, birthday_date)
-                VALUES (%s, %s, %s, %s, %s, %s,%s)
-                ON CONFLICT (username) DO NOTHING RETURNING user_id
-                """,
-                (username, email, "google_authorised", "Worker", first_name, last_name, birthday_str),
-            )
-
+            cursor.execute("SELECT user_id, role_name, second_name FROM users WHERE email = %s", (email,))
             user_row = cursor.fetchone()
-            if user_row is not None:
-                user_id = user_row[0]
+            if user_row:
+                user_id, role_name, second_name = user_row
+                if second_name and not last_name:
+                    display_name = f"{first_name} {second_name}"
             else:
-                cursor.execute("SELECT user_id FROM users WHERE username = %s", (email,))
+                cursor.execute(
+                    """
+                    INSERT INTO users (username, email, password_hash, role_name, first_name, second_name, birthday_date)
+                    VALUES (%s, %s, %s, %s, %s, %s,%s)
+                    ON CONFLICT (username) DO NOTHING RETURNING user_id
+                    """,
+                    (username, email, "google_authorised", "Worker", first_name, last_name, birthday_str),
+                )
+                db.commit()
                 user_id = cursor.fetchone()[0]
-            db.commit()
 
             session.clear()
-            session["user_id"] = user_id
-            session["username"] = email
-            session["name"] = display_name if display_name else email
-            session["profile_pic"] = profile_pic
-            session["role_name"] = "Worker"
+            session.update(
+                {
+                    "user_id": user_id,
+                    "username": email,
+                    "name": display_name or email,
+                    "profile_pic": profile_pic,
+                    "role_name": role_name,
+                }
+            )
+
     return redirect(url_for("index"))
 
 

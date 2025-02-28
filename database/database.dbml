@@ -9,7 +9,7 @@ Table "users" {
   "username" varchar(50) [unique, not null]
   "password_hash" varchar(200) [not null]
   "role_name" role_enum [not null]
-  "first_name" varchar(50)
+  "first_name" varchar(50) [not null]
   "second_name" varchar(50)
   "birthday_date" date
   "email" varchar(100) [unique, not null]

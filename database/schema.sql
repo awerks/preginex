@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(200) NOT NULL,
     role_name role_enum NOT NULL,
-    first_name VARCHAR(50),
+    first_name VARCHAR(50) NOT NULL,
     second_name VARCHAR(50),
     birthday_date DATE,
     email VARCHAR(100) UNIQUE NOT NULL
