@@ -23,7 +23,3 @@ def send_email(to_address, subject, html_body):
     with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=5) as server:
         server.login(smtp_username, smtp_password)
         server.sendmail(from_address, to_address, message.as_string())
-
-
-
-

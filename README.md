@@ -11,6 +11,10 @@
 
 if you sign in with google, you'll have worker's access rights for now.
 
+## Project overview
+
+![Project overview](documentation/project_uml_diagram.png)
+
 ## Database UML diagram:
 
 ![Database UML diagram](documentation/database_uml_diagram.png)
