@@ -3,4 +3,5 @@
 *.pyd
 __pycache__/
 *.log
+plantuml/
 *.plantuml
