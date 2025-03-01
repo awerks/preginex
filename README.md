@@ -13,16 +13,14 @@ if you sign in with google, you'll have worker's access rights for now.
 
 ## Database UML diagram:
 
-![Database UML diagram](database/uml_diagram.png)
+![Database UML diagram](documentation/database_uml_diagram.png)
 
 - PDF version [here](documentation/uml_diagram.pdf)
 - Also check out the docs for this database [here](https://dbdocs.io/awerks/software_project)
 
 ## Software requirements specification
 
-- [Google Docs](https://docs.google.com/document/d/1X-tgVVlT9g7ckr5P7b86xfEdJoca1BdAu7juNzQIzRM/edit?tab=t.0#heading=h.cvzov8a88e28)
-- [Overleaf](https://www.overleaf.com/8652163511gmrztypckwxz#f8ed04)
-- See compiled version [here](documentation/software_requirements.pdf)
+- [Google Docs](https://docs.google.com/document/d/1UE8azQz9dO_mM2t4nm7vOSfES7vWDuyTUcNNcwqRDOE/edit?usp=sharing)
 
 ## Getting started with the project
 

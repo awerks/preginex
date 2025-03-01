@@ -20,12 +20,10 @@ def send_email(to_address, subject, html_body):
     html_part = MIMEText(html_body, "html")
     message.attach(text_part)
     message.attach(html_part)
-    print("smtp_server", smtp_server)
-    print("smtp_port", smtp_port)
-    print("smtp_username", smtp_username)
-    print("smtp_password", smtp_password)
-    print("from_address", from_address)
-    print("to_address", to_address)
     with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=5) as server:
         server.login(smtp_username, smtp_password)
         server.sendmail(from_address, to_address, message.as_string())
+
+
+
+
