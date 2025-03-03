@@ -40,7 +40,7 @@ git clone https://github.com/avalean07/se_project_1000 && cd se_project_1000
 conda create -n se_project python=3.12 --file requirements.txt
 ```
 
-## Set environment variables (provided in google docs)
+## Set environment variables
 
 - `SMTP_SERVER`
 - `SMTP_PORT`
@@ -70,10 +70,6 @@ flask run --debug
 ### Access the local server
 
 The server can be accessed at [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
-
-## P.S
-
-Add your pictures to static/images in the format of `<team-memberX>.jpg`
 
 ## Deployment
 
