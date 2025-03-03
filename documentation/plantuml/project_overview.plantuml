@@ -1,0 +1,41 @@
+@startuml
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam packageTitleFontSize 14
+skinparam defaultFontSize 12
+
+title High-Level Project Architecture
+
+actor "User" as user
+
+package "Flask Application" {
+  component "app.py" as app_py
+  component "auth.py" as auth_py
+  component "db.py" as db_py
+  component "utils.py" as utils_py
+}
+
+package "Templates" {
+  rectangle "HTML Templates" as templates
+}
+note right of templates
+  These are Jinja2 or HTML files rendered by Flask.
+end note
+
+cloud "Google OAuth (Flask-Dance)" as google_oauth
+database "PostgreSQL" as postgres
+cloud "SMTP Email Server" as smtp
+
+user --> app_py : HTTP Requests
+
+app_py --> auth_py : Registers Blueprint & Auth Routes
+app_py --> db_py   : Database Queries
+app_py --> google_oauth : Uses Flask-Dance for Google login
+
+auth_py --> db_py    : Validates & Stores User Data
+auth_py --> utils_py : Sends Emails
+auth_py --> smtp     : Outbound Emails
+
+db_py --> postgres   : SQL Queries
+
+@enduml

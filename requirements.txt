@@ -7,4 +7,3 @@ MarkupSafe
 Werkzeug
 flask-dance
 psycopg2
-aiosmtplib

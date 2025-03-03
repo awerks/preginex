@@ -1,0 +1,57 @@
+@startuml
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam packageTitleFontSize 14
+skinparam defaultFontSize 12
+
+title Classes Description
+
+class "App (app.py)" as app {
+  - session : Session
+  --
+  +index()
+  +google_login()
+  +projects()
+  +privacy()
+  +create_project()
+  +tasks()
+  +create_task()
+  +get_projects()
+  +get_tasks()
+  +events()
+  +request_event()
+  +approve_event()
+  +get_events()
+  +about()
+}
+
+class "Auth (auth.py)" as auth {
+  +login()
+  +check_username()
+  +check_email()
+  +register()
+  +confirm_email()
+  +resend_confirmation()
+  +check_confirmation()
+  +forgot_password()
+  +reset_password()
+  +logout()
+}
+
+class "DB (db.py)" as db {
+  +get_db()
+  +connect_db()
+  +close_db()
+}
+
+class "Utils (utils.py)" as utils {
+  +send_email()
+}
+
+user --> app : interacts
+app --> auth : uses
+app --> db   : queries
+app --> utils: calls
+auth --> db  : validates
+auth --> utils : emails
+@enduml

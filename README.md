@@ -24,7 +24,6 @@ if you sign in with google, you'll have worker's access rights for now.
 
 ## Software requirements specification
 
-- [Google Docs](https://docs.google.com/document/d/1UE8azQz9dO_mM2t4nm7vOSfES7vWDuyTUcNNcwqRDOE/edit?usp=sharing)
 - See compiled Latex version [here](documentation/pdf/software_requirements.pdf)
 
 ## Getting started with the project
