@@ -50,7 +50,7 @@ def google_login():
         email = emails[0].get("value").lower() if emails else "None"
         username = email.split("@")[0]
         names = user_info.get("names", [])
-        role_name = "Worker"
+        role_name = "Admin"
         if names:
             first_name = names[0].get("givenName")
             last_name = names[0].get("familyName")
