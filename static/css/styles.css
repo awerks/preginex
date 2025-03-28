@@ -787,7 +787,11 @@ h2 {
 
 @media (max-width: 768px) {
     #projectGraph {
-        height: 450px;
+        height: 400px;
+    }
+
+    canvas {
+        touch-action: revert !important;
     }
 }
 
