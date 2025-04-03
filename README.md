@@ -1,4 +1,3 @@
-# Software engineering project
 
 ## Link to the website:
 
