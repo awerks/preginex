@@ -416,7 +416,6 @@ def analysis():
 
 
 @app.route("/about", methods=["GET"])
-@login_required
 def about():
     return render_template("about.html", events=events)
 

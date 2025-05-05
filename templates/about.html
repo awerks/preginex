@@ -1,26 +1,86 @@
-{% extends 'base.html' %}
-{% block title %}About - Campus Scheduler{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}About - Campus Scheduler{% endblock %} {% block content %}
 <section class="about-container">
     <h1>About Campus Event & Task Scheduler</h1>
-    <p>Welcome to Campus Event & Task Scheduler, your favourite platform for organizing campus events and managing
-        tasks</p>
+    <p>
+        Welcome to Campus Event & Task Scheduler, your favourite platform for organizing campus events and managing
+        tasks
+    </p>
 
+    <h2>Our Mission</h2>
+    <p>We look forward to being the best campus scheduler!</p>
 
-
+    <h2>Meet the Team</h2>
     <div class="team-section">
         <div class="team-member">
-            <img src="{{ url_for('static', filename='images/team-member1.jpg') }}" alt="Team Member 1"
-                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';">
+            <img
+                src="{{ url_for('static', filename='images/team-member1.jpg') }}"
+                alt="Team Member 1"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
             <h3>Illia Shust</h3>
-            <p>
-                I'm a passionate developer with an interest in all kinds of technologies. I love coding in my spare time
-            </p>
         </div>
-
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member2.jpg') }}"
+                alt="Team Member 2"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Cristofer Pablo</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member3.jpg') }}"
+                alt="Team Member 3"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Bogdan Cprljakovic</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member4.jpg') }}"
+                alt="Team Member 4"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Alex Serg</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member5.jpg') }}"
+                alt="Team Member 5"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Alim Togayev</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member6.jpg') }}"
+                alt="Team Member 6"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Azimjon Akhmadjonov</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member7.jpg') }}"
+                alt="Team Member 7"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Hamid</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member8.jpg') }}"
+                alt="Team Member 8"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Kinlo ET</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member9.jpg') }}"
+                alt="Team Member 9"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Ben</h3>
+        </div>
+        <div class="team-member">
+            <img
+                src="{{ url_for('static', filename='images/team-member10.jpg') }}"
+                alt="Team Member 10"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder.jpg') }}';" />
+            <h3>Andrei Valean</h3>
+        </div>
     </div>
-
-
 </section>
 {% endblock %}
