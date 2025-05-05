@@ -112,6 +112,7 @@ def google_login():
 
 
 @app.route("/projects", methods=["GET"])
+@login_required
 def projects():
     if "role_name" not in session or session["role_name"] not in ["Admin", "Manager"]:
         logger.info("Unnauthorized access to projects page")
@@ -136,6 +137,7 @@ def log_ip():
 
 
 @app.route("/create_project", methods=["POST"])
+@login_required
 def create_project():
     # Only Admin/Manager should be able to create projects
     if "role_name" not in session or session["role_name"] not in ["Admin", "Manager"]:
