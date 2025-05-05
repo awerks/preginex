@@ -334,7 +334,7 @@ footer {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
 
     .nav-toggle {
         display: block;
@@ -348,7 +348,7 @@ footer {
         top: 60px;
         left: 0;
         width: 100%;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         height: calc(100% - 60px);
         background-color: #6200ee;
         padding-top: 2rem;
@@ -447,7 +447,7 @@ footer {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ccc;
-
+    font-size: .875rem;
     border-radius: 4px;
 }
 
@@ -640,7 +640,7 @@ footer {
 
 .task-form label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     font-weight: 600;
     color: #333;
 }
@@ -866,4 +866,166 @@ h2 {
 .event-form textarea {
     resize: vertical;
     min-height: 80px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #6200ee;
+    font-weight: 600;
+    font-size: 2.2rem;
+}
+
+.analysis-section {
+    background-color: #ffffff;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid #6200ee;
+}
+
+.analysis-section h2 {
+    color: #6200ee;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e0e0e0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.analysis-section h2::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 0.5rem;
+}
+
+.analysis-section:nth-of-type(1) h2::before {
+    content: "\f0e8";
+}
+
+.analysis-section:nth-of-type(2) h2::before {
+    content: "\f201";
+}
+
+
+.analysis-section h3 {
+    color: #444;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.analysis-section p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+    color: #555;
+    font-size: 1rem;
+}
+
+.analysis-section strong {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.project-analysis {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.project-analysis:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.task-list-ordered {
+    padding-left: 25px;
+    list-style: decimal;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.task-list-ordered li {
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #7e57c2;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    line-height: 1.5;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+.cost-crashing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    background-color: #fff;
+}
+
+.cost-crashing-table thead th {
+    background-color: #ede7f6;
+    color: #333;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border: none;
+    border-bottom: 2px solid #d1c4e9;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.cost-crashing-table tbody td {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-bottom: 1px solid #f1f1f1;
+    color: #444;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.cost-crashing-table tbody td:first-child {
+    text-align: left;
+    font-weight: 500;
+}
+
+.cost-crashing-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.cost-crashing-table tbody tr:nth-child(even) {
+    background-color: #fdfcfe;
+}
+
+.cost-crashing-table tbody tr:hover {
+    background-color: #f5f3f7;
+}
+
+.warning-box {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-left: 5px solid #ffc107;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 6px;
+    text-align: left;
+}
+
+.warning-box strong {
+    color: #856404;
+    font-weight: 600;
 }

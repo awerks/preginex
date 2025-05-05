@@ -31,10 +31,11 @@ logger.info("Logging setup complete.")
 
 
 @app.route("/")
-@login_required
 def index():
 
-    user = session.get("name") or session.get("username").split("@")[0]
+    user = session.get("name")
+    if not user and session.get("username"):
+        user = session["username"].split("@")[0]
     return render_template("index.html", user=user)
 
 
@@ -186,8 +187,6 @@ def create_task():
 
     if "role_name" not in session or session["role_name"] not in ["Admin", "Manager"]:
         return "Unauthorized Access"
-    # if session["role_name"] == "Admin":
-    #     return "Only managers can create tasks"
 
     if request.method == "POST":
         task_name = request.form["task_name"]
@@ -351,6 +350,69 @@ def get_events():
         )
         result = cursor.fetchone()[0]
     return jsonify(result if result else [])
+
+
+@app.route("/analysis", methods=["GET"])
+@login_required
+def analysis():
+    if "role_name" not in session or session["role_name"] not in ["Admin", "Manager"]:
+        flash("Unauthorized access.", "error")
+        return redirect(url_for("login"))
+
+    db = get_db()
+    projects_data = []
+    with db.cursor(cursor_factory=RealDictCursor) as cursor:
+
+        cursor.execute(
+            """
+            SELECT p.project_id, p.project_name, p.start_date, p.end_date,
+                   t.task_id, t.task_name, t.deadline, t.status, t.normal_duration, t.crash_duration,
+                   t.normal_cost, t.crash_cost
+            FROM projects p
+            LEFT JOIN tasks t ON p.project_id = t.project_id
+            WHERE t.task_id IS NOT NULL
+            ORDER BY p.project_id, t.deadline ASC;
+        """
+        )
+        rows = cursor.fetchall()
+
+        current_project_id = None
+        project_tasks = []
+        for row in rows:
+            if row["project_id"] != current_project_id:
+                if current_project_id is not None and project_tasks:
+                    projects_data[-1]["tasks"] = project_tasks
+                projects_data.append(
+                    {
+                        "project_id": row["project_id"],
+                        "project_name": row["project_name"],
+                        "start_date": row["start_date"],
+                        "end_date": row["end_date"],
+                        "tasks": [],
+                    }
+                )
+                current_project_id = row["project_id"]
+                project_tasks = []
+
+            project_tasks.append(
+                {
+                    "task_id": row["task_id"],
+                    "task_name": row["task_name"],
+                    "deadline": row["deadline"],
+                    "status": row["status"],
+                    "normal_duration": row["normal_duration"],
+                    "crash_duration": row["crash_duration"],
+                    "normal_cost": row["normal_cost"],
+                    "crash_cost": row["crash_cost"],
+                }
+            )
+
+        if projects_data and project_tasks:
+            projects_data[-1]["tasks"] = project_tasks
+
+    projects_data = [p for p in projects_data if p.get("tasks")]
+
+    return render_template("analysis.html", projects_data=projects_data)
 
 
 @app.route("/about", methods=["GET"])

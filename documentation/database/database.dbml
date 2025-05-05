@@ -33,6 +33,10 @@ Table "tasks" {
   "status" varchar(50) [default: 'Pending']
   "project_id" int4 [not null]
   "assigned_to" int4 [not null]
+  "normal_duration" int4 [default: 0]
+  "crash_duration" int4 [default: 0]
+  "normal_cost" numeric(10,2) [default: 0.00]
+  "crash_cost" numeric(10,2) [default: 0.00]
 }
 
 Table "events" {

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     role_name role_enum NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     second_name VARCHAR(50),
-    birthday_date DATE,
+    birthday_date DATE, 
     email VARCHAR(100) UNIQUE NOT NULL,
     confirmed BOOLEAN DEFAULT FALSE,
 );
@@ -33,6 +33,10 @@ CREATE TABLE IF NOT EXISTS tasks(
     status VARCHAR(50) DEFAULT 'Pending', -- 'Pending', 'In Progress', 'Completed'
     project_id INTEGER NOT NULL,
     assigned_to INTEGER NOT NULL,  -- Worker/Employee assigned to this task
+    normal_duration INTEGER DEFAULT 0,
+    crash_duration INTEGER DEFAULT 0,
+    crash_cost INTEGER DEFAULT 0,
+    normal_cost INTEGER DEFAULT 0,
     FOREIGN KEY (project_id) REFERENCES projects(project_id),
     FOREIGN KEY (assigned_to) REFERENCES users(user_id)
 );
