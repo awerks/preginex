@@ -6,7 +6,15 @@
         Your all-in-one solution for managing campus events and project tasks seamlessly. Dive in to explore and
         organize!
     </p>
-    <a href="{{ url_for('events') }}" class="btn btn-primary"> <i class="fas fa-arrow-right"></i> Explore Events </a>
+    <div class="hero-features">
+        <span><i class="fas fa-tasks"></i> Task Management</span>
+        <span><i class="fas fa-calendar-alt"></i> Event Scheduling</span>
+        <span><i class="fas fa-project-diagram"></i> Project Tracking</span>
+        <span><i class="fas fa-check-circle"></i> Approval Workflows</span>
+    </div>
+    <a href="{{ url_for('projects') }}" class="btn btn-primary">
+        <i class="fas fa-arrow-right"></i> Explore Projects
+    </a>
 </section>
 
 {% endblock %}
