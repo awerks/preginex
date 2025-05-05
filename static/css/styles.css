@@ -910,7 +910,6 @@ h2 {
     margin-bottom: 2.5rem;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-top: 4px solid #6200ee;
 }
 
 .analysis-section h2 {
@@ -943,8 +942,7 @@ h2 {
 
 .analysis-section h3 {
     color: #444;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-block: 2rem;
     font-size: 1.3rem;
     font-weight: 600;
 }
@@ -977,7 +975,7 @@ h2 {
     padding-left: 25px;
     list-style: decimal;
     margin-top: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .task-list-ordered li {
