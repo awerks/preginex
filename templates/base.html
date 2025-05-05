@@ -67,11 +67,13 @@
                                 <i class="fas fa-calendar"></i> Events
                             </a>
                         </li>
+                        {% if session.get('role_name') in ['Admin','Manager'] %}
                         <li class="nav-item">
                             <a href="{{ url_for('analysis') }}" class="nav-link">
                                 <i class="fas fa-dollar-sign"></i> Costs
                             </a>
                         </li>
+                        {% endif %}
 
                         <li class="nav-item" id="logout-link">
                             <a href="{{ url_for('auth.logout') }}" class="nav-link">
