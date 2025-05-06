@@ -139,19 +139,36 @@ def log_ip():
 @app.route("/create_project", methods=["POST"])
 @login_required
 def create_project():
-    # Only Admin/Manager should be able to create projects
+    # only admin/project_manager should be able to create projects
     if "role_name" not in session or session["role_name"] not in ["Admin", "Manager"]:
         logger.info("Unnauthorized access to projects page")
         return "Unauthorized Access"
-    # if session["role_name"] == "Admin":
-    #     return "Only managers can create tasks"
-    # print(session["role_name"])
+
     if request.method == "POST":
-        project_name = request.form["project_name"]
-        description = request.form["description"]
-        start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d")
-        end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d")
-        manager_id = session["user_id"]  # if the logged in user is manager
+        project_name = request.form.get("project_name")
+        description = request.form.get("description")
+        start_date_str = request.form.get("start_date")
+        end_date_str = request.form.get("end_date")
+
+        if not all([project_name, description, start_date_str, end_date_str]):
+            logger.info("Missing required fields for project creation")
+            flash("Please fill in all required fields.", "error")
+            return redirect(url_for("projects"))
+
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+        except ValueError:
+            logger.info("Invalid date format for project creation")
+            flash("Invalid date format. Please use YYYY-MM-DD.", "error")
+            return redirect(url_for("projects"))
+
+        if start_date > end_date:
+            logger.info("Start date cannot be after end date for project creation")
+            flash("Start date cannot be after end date.", "error")
+            return redirect(url_for("projects"))
+
+        manager_id = session["user_id"]
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute(
@@ -191,12 +208,45 @@ def create_task():
         return "Unauthorized Access"
 
     if request.method == "POST":
-        task_name = request.form["task_name"]
-        task_description = request.form["task_description"]
+        task_name = request.form.get("task_name")
+        task_description = request.form.get("task_description")
+        deadline_str = request.form.get("deadline")
+        assigned_to_str = request.form.get("assigned_to")
+        project_id_str = request.form.get("project_id")
 
-        deadline = request.form["deadline"]
-        assigned_to = request.form["assigned_to"]
-        project_id = request.form["project_id"]
+        if not all([task_name, task_description, deadline_str, assigned_to_str, project_id_str]):
+            logger.info("Missing required fields for task creation")
+            flash("Please fill in all required fields.", "error")
+            return redirect(url_for("tasks"))
+
+        try:
+            deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+            assigned_to = int(assigned_to_str)
+            project_id = int(project_id_str)
+        except ValueError:
+            logger.info("Invalid format for deadline, assigned_to, or project_id.")
+            flash("Invalid data format. Deadline should be YYYY-MM-DD. User and Project IDs must be numbers.", "error")
+            return redirect(url_for("tasks"))
+
+        if deadline < datetime.now().date():
+            logger.info("Deadline cannot be in the past for task creation.")
+            flash("Deadline cannot be in the past.", "error")
+            return redirect(url_for("tasks"))
+
+        db = get_db()
+        with db.cursor() as cursor:
+            cursor.execute("SELECT project_id FROM projects WHERE project_id = %s", (project_id,))
+            if cursor.fetchone() is None:
+                logger.info(f"Attempted to create task for non-existent project_id: {project_id}")
+                flash("Selected project does not exist.", "error")
+                return redirect(url_for("tasks"))
+
+            cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (assigned_to,))
+            if cursor.fetchone() is None:
+                logger.info(f"Attempted to assign task to non-existent user_id: {assigned_to}")
+                flash("Selected user for assignment does not exist.", "error")
+                return redirect(url_for("tasks"))
+
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute(
@@ -297,10 +347,38 @@ def events():
 @login_required
 def request_event():
     if request.method == "POST":
-        event_name = request.form["event_name"]
-        event_description = request.form["event_description"]
-        event_date = request.form["event_date"]
-        requested_by = session["user_id"]
+        event_name = request.form.get("event_name")
+        event_description = request.form.get("event_description")
+        event_date_str = request.form.get("event_date")
+        requested_by = session.get("user_id")
+
+        if not all([event_name, event_description, event_date_str, requested_by]):
+            logger.info("Missing required fields for event request")
+            flash("Please fill in all required fields.", "error")
+            return redirect(url_for("events"))
+
+        try:
+            event_date = datetime.strptime(event_date_str, "%Y-%m-%d").date()
+        except ValueError:
+            logger.info("Invalid date format for event request")
+            flash("Invalid date format. Please use YYYY-MM-DD.", "error")
+            return redirect(url_for("events"))
+
+        if event_date < datetime.now().date():
+            logger.info("Event date cannot be in the past for event request.")
+            flash("Event date cannot be in the past.", "error")
+            return redirect(url_for("events"))
+
+        if len(event_name) > 255:
+            logger.info("Event name too long for event request.")
+            flash("Event name is too long (maximum 255 characters).", "error")
+            return redirect(url_for("events"))
+
+        if len(event_description) > 512:
+            logger.info("Event description too long for event request.")
+            flash("Event description is too long (maximum 1000 characters).", "error")
+            return redirect(url_for("events"))
+
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute(
@@ -308,7 +386,7 @@ def request_event():
                 (event_name, event_description, event_date, requested_by),
             )
             db.commit()
-        logger.info("Event requested successfully")
+        logger.info(f"Event '{event_name}' requested successfully by user_id: {requested_by}")
         flash("Event requested successfully!", "success")
         return redirect(url_for("events"))
 
@@ -316,8 +394,19 @@ def request_event():
 @app.route("/approve_event/<int:event_id>", methods=["POST"])
 @login_required
 def approve_event(event_id):
+
+    if "role_name" not in session or session["role_name"] not in ["Admin", "Manager"]:
+        logger.info("Unauthorized access to approve event")
+        flash("Unauthorized access.", "error")
+        return redirect(url_for("events"))
+    if not event_id:
+        logger.info("Event ID not provided")
+        flash("Event ID not provided.", "error")
+        return redirect(url_for("events"))
+
     db = get_db()
     approver = session["user_id"]
+
     with db.cursor() as cursor:
         cursor.execute(
             "UPDATE events SET approved_by = %s WHERE event_id = %s",
@@ -419,7 +508,7 @@ def analysis():
 
 @app.route("/about", methods=["GET"])
 def about():
-    return render_template("about.html", events=events)
+    return render_template("about.html")
 
 
 @app.context_processor

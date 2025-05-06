@@ -9,14 +9,12 @@ logger = logging.getLogger(__name__)
 def get_db():
 
     if "db" not in g:
-        # slogger.info("No existing database connection found. Creating a new one.")
         g.db = connect_db()
 
     return g.db
 
 
 def connect_db():
-
     try:
         logger.info("Attempting to connect to the PostgreSQL database.")
         if os.environ.get("FLASK_ENV", "development") == "development":

@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
@@ -46,13 +45,13 @@
 <h2>Assign New Tasks</h2>
 <form method="POST" action="{{ url_for('create_task') }}" class="task-form">
     <label for="task_name">Task Name:</label>
-    <input type="text" id="task_name" name="task_name" required>
+    <input type="text" id="task_name" name="task_name" required />
 
     <label for="task_description">Description:</label>
     <textarea id="task_description" name="task_description" required></textarea>
 
     <label for="deadline">Deadline:</label>
-    <input type="date" id="deadline" name="deadline" required>
+    <input type="date" id="deadline" name="deadline" required />
 
     <label for="project_id">Project:</label>
     <select id="project_id" name="project_id" required>
@@ -71,27 +70,22 @@
     <button type="submit" class="btn btn-primary">Create New Task</button>
 </form>
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-{% for message in messages %}
-<script>alert("{{ message }}")</script>
-{% endfor %}
-{% endif %}
-{% endwith %}
-{% endif %}
-
-
+{% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+<script>
+    alert("{{ message }}");
+</script>
+{% endfor %} {% endif %} {% endwith %} {% endif %}
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var taskCalendarEl = document.getElementById("taskCalendar");
 
         var isMobile = window.innerWidth < 768;
-        var defaultView = isMobile ? 'listWeek' : 'dayGridMonth';
+        var defaultView = isMobile ? "listWeek" : "dayGridMonth";
 
         var headerConfig = isMobile
-            ? { left: 'prev,next', right: 'today' }
-            : { left: 'title', right: 'prev,next,dayGridMonth,timeGridWeek,timeGridDay,listWeek' };
+            ? { left: "prev,next", right: "today" }
+            : { left: "title", right: "prev,next,dayGridMonth,timeGridWeek,timeGridDay,listWeek" };
         var taskCalendar = new FullCalendar.Calendar(taskCalendarEl, {
             initialView: defaultView,
             headerToolbar: headerConfig,
@@ -102,8 +96,8 @@
                 if (info.event.extendedProps.description) {
                     tippy(info.el, {
                         content: "Description: " + info.event.extendedProps.description,
-                        placement: 'top',
-                        arrow: true
+                        placement: "top",
+                        arrow: true,
                     });
                 }
             },

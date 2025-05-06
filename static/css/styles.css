@@ -42,8 +42,9 @@ main.container {
 
 
 .navbar {
-
-    background-color: #6200ee;
+    background: linear-gradient(to right, #6200ee, #7b42d1c1);
+    /* background-color: #6200ee; */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     padding: 1.25rem 1rem;
 }
 
@@ -138,10 +139,27 @@ main.container {
     text-decoration: none;
     font-weight: 500;
     gap: 0.3rem;
+    transition: color 0.1s ease;
+    position: relative;
 }
 
-.nav-link:hover {
-    color: #ccc;
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: -26px;
+    left: 0;
+    width: 100%;
+    border-radius: 2rem;
+    overflow: hidden;
+    opacity: 0;
+    height: 3px;
+    background-color: #fff;
+    transition: opacity 0.3s ease;
+}
+
+.nav-link:not(.profile-trigger):hover::before,
+.nav-link.active::before {
+    opacity: 100%;
 }
 
 
@@ -204,7 +222,7 @@ main.container {
 
 
 footer {
-    background-color: #6200ee;
+    background: linear-gradient(to right, #6200ee, #7b42d1c1);
     color: #fff;
     padding: 1.25rem 0;
 
@@ -371,6 +389,11 @@ footer {
         color: #fff;
     }
 
+    .navbar,
+    footer {
+        background: #6200ee;
+    }
+
     .nav-menu {
         position: fixed;
         top: 60px;
@@ -393,6 +416,10 @@ footer {
 
     .nav-menu.nav-menu_visible {
         transform: translateX(0);
+    }
+
+    .nav-link::before {
+        bottom: -0.5rem;
     }
 
     .nav-link i {

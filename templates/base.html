@@ -38,38 +38,56 @@
 
                     <ul class="nav-menu">
                         <li class="nav-item">
-                            <a href="{{ url_for('index') }}" class="nav-link"> <i class="fas fa-home"></i> Home </a>
+                            <a
+                                href="{{ url_for('index') }}"
+                                class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                                <i class="fas fa-home"></i> Home
+                            </a>
                         </li>
                         {% if not session.get('username') %}
                         <li class="nav-item">
-                            <a href="{{ url_for('about') }}" class="nav-link">
+                            <a
+                                href="{{ url_for('about') }}"
+                                class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">
                                 <i class="fas fa-info-circle"></i> About
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('privacy') }}" class="nav-link">
+                            <a
+                                href="{{ url_for('privacy') }}"
+                                class="nav-link {% if request.endpoint == 'privacy' %}active{% endif %}">
                                 <i class="fas fa-user-shield"></i> Privacy
                             </a>
                         </li>
                         {% endif %} {% if session.get('username') %} {% if session.get('role_name') in
                         ['Admin','Manager'] %}
                         <li class="nav-item">
-                            <a href="{{ url_for('projects') }}" class="nav-link">
+                            <a
+                                href="{{ url_for('projects') }}"
+                                class="nav-link {% if request.endpoint == 'projects' %}active{% endif %}">
                                 <i class="fas fa-project-diagram"></i> Projects
                             </a>
                         </li>
                         {% endif %}
                         <li class="nav-item">
-                            <a href="{{ url_for('tasks') }}" class="nav-link"> <i class="fas fa-tasks"></i> Tasks </a>
+                            <a
+                                href="{{ url_for('tasks') }}"
+                                class="nav-link {% if request.endpoint == 'tasks' %}active{% endif %}">
+                                <i class="fas fa-tasks"></i> Tasks
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('events') }}" class="nav-link">
+                            <a
+                                href="{{ url_for('events') }}"
+                                class="nav-link {% if request.endpoint == 'events' %}active{% endif %}">
                                 <i class="fas fa-calendar"></i> Events
                             </a>
                         </li>
                         {% if session.get('role_name') in ['Admin','Manager'] %}
                         <li class="nav-item">
-                            <a href="{{ url_for('analysis') }}" class="nav-link">
+                            <a
+                                href="{{ url_for('analysis') }}"
+                                class="nav-link {% if request.endpoint == 'analysis' %}active{% endif %}">
                                 <i class="fas fa-dollar-sign"></i> Costs
                             </a>
                         </li>
@@ -108,12 +126,16 @@
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a href="{{ url_for('auth.login') }}" class="nav-link">
+                            <a
+                                href="{{ url_for('auth.login') }}"
+                                class="nav-link {% if request.endpoint == 'auth.login' %}active{% endif %}">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('auth.register') }}" class="nav-link">
+                            <a
+                                href="{{ url_for('auth.register') }}"
+                                class="nav-link {% if request.endpoint == 'auth.register' %}active{% endif %}">
                                 <i class="fas fa-user-plus"></i> Register
                             </a>
                         </li>
