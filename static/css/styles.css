@@ -845,9 +845,9 @@ h2 {
         height: 400px;
     }
 
-    canvas {
+    /* canvas {
         touch-action: revert !important;
-    }
+    } */
 }
 
 .title {

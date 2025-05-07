@@ -1,5 +1,6 @@
 import logging
 import os
+import sentry_sdk
 from datetime import datetime
 from flask import Flask, jsonify, render_template, redirect, url_for, session, request, flash
 from auth import auth_bp, login_required, google_bp
@@ -8,6 +9,8 @@ from psycopg2.extras import RealDictCursor
 from flask_dance.contrib.google import google
 from sys import stdout
 from werkzeug.middleware.proxy_fix import ProxyFix
+from sentry_sdk.integrations.flask import FlaskIntegration
+
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
@@ -15,6 +18,10 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev")
 app.jinja_env.globals["now"] = datetime.now
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+
+if not app.debug:
+    sentry_sdk.init(dsn=os.environ.get("SENTRY_SDK"), integrations=[FlaskIntegration()])
+
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(google_bp, url_prefix="/login")
 
