@@ -1,6 +1,6 @@
 
 
-import { toast, confirmBox } from "./utils.js";
+import { toast, confirmBox, isMobile } from "./utils.js";
 
 function htmlTitle(html) {
     const container = document.createElement("div");
@@ -8,6 +8,7 @@ function htmlTitle(html) {
     container.innerHTML = html;
     return container;
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -125,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 interaction: {
                     hover: true,
-                    zoomView: true,
+                    zoomView: isMobile(),
                     dragView: true
                 },
                 edges: {
