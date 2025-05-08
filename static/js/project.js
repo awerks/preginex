@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             task.status +
                             "</span>",
                         ),
-                        shape: "ellipse",
+                        shape: "box",
                         color:
                             task.status === "Completed"
                                 ? "#4caf50"
