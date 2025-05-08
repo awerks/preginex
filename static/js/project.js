@@ -181,19 +181,29 @@ document.addEventListener("DOMContentLoaded", function () {
             button.classList.replace("btn-neutral", "btn-success");
             button.textContent = "Save";
             // if click outside of the current row, cancel the edit
-            function handleOutsideClick(e) {
-                if (row.contains(e.target)) return;
-
+            function cleanUp() {
                 row.querySelectorAll('.editable').forEach(td => {
                     td.contentEditable = false;
                     td.classList.remove('editable');
                 });
                 button.classList.replace('btn-success', 'btn-neutral');
                 button.textContent = 'Edit';
+                // capture:true so we fire before table’s own click handler
                 document.removeEventListener('click', handleOutsideClick, true);
+                document.removeEventListener('keydown', handleKeydown);
             }
-            // capture:true so we fire before table’s own click handler
+            function handleOutsideClick(e) {
+                if (row.contains(e.target)) return;
+                cleanUp();
+            }
+            function handleKeydown(e) {
+                if (e.key === 'Escape') {
+                    cleanUp();
+                }
+            }
             document.addEventListener('click', handleOutsideClick, true);
+            document.addEventListener('keydown', handleKeydown);
+
         }
         else if (event.target.classList.contains("btn-danger")) {
             const projectName = event.target.closest("tr").querySelector("td").innerText;

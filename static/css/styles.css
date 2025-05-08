@@ -767,7 +767,6 @@ h2 {
 }
 
 td.editable {
-    cursor: pointer;
     background-color: #f0f8ff;
     outline: 1px solid #6200ee;
 }
