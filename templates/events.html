@@ -1,25 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Campus Events{% endblock %}
 {% block extra_head %}
-    {{ super() }}
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js" defer></script>
+    <script src="https://unpkg.com/@popperjs/core@2" defer></script>
+    <script src="https://unpkg.com/tippy.js@6" defer></script>
 {% endblock %}
 
 {% block content %}
     <h1 class="title">Campus Events</h1>
 
     <div id="calendar"></div>
-
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <script>
-                    alert("{{ message }}");
-                </script>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 
     <h2>Request a New Event</h2>
     <form method="POST" action="{{ url_for('request_event') }}" class="event-form">
@@ -42,16 +33,22 @@
     </form>
 {% endblock %}
 
-{% block scripts %}
-    {{ super() }}
+{% block extra_js %}
     <script>
         const GET_EVENTS_URL = "{{ url_for('get_events') }}";
         const USER_ROLE = "{{ session.get('role_name', '') }}";
         const CURRENT_USERNAME = "{{ session.get('username', '') }}";
         const APPROVE_EVENT_URL_BASE = "/approve_event/";
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://unpkg.com/tippy.js@6"></script>
     <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
 {% endblock %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}

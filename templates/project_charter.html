@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% block title %}Project Charter{% endblock %}
+
+{% block extra_head %}
+    <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/standalone/umd/vis-network.min.js" defer></script>
+{% endblock %}
 
 {% block content %}
     <h1 class="title" style="margin-bottom: 1.5rem;">Projects and Tasks Graph</h1>
@@ -70,23 +75,21 @@
         </div>
         <button type="submit" class="btn btn-primary">Create Project</button>
     </form>
-
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <script>
-                    alert("{{ message }}");
-                </script>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 {% endblock %}
 
-{% block scripts %}
-    {{ super() }}
-    <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
+{% block extra_js %}
     <script>
         const PROJECTS_URL = "{{ url_for('get_projects') }}";
     </script>
     <script src="{{ url_for('static', filename='js/project.js') }}"></script>
 {% endblock %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
