@@ -38,15 +38,23 @@
                         <th>Description</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for project in projects %}
-                        <tr>
+                        <tr data-project-id="{{ project.project_id }}">
                             <td>{{ project.project_name }}</td>
                             <td>{{ project.description }}</td>
                             <td>{{ project.start_date }}</td>
                             <td>{{ project.end_date }}</td>
+                            <td>
+                                <button class="btn btn-neutral">Edit</button>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -63,7 +71,7 @@
         </div>
         <div class="form-group">
             <label for="description">Description:</label>
-            <textarea id="description" name="description" required minlength="2" maxlength="512"></textarea>
+            <textarea id="description" name="description" minlength="2" required maxlength="512"></textarea>
         </div>
         <div class="form-group">
             <label for="start_date">Start Date:</label>
@@ -80,25 +88,8 @@
 {% block extra_js %}
     <script>
         const PROJECTS_URL = "{{ url_for('get_projects') }}";
-        document.querySelector("form").addEventListener("submit", function (event) {
-            const startDate = new Date(document.getElementById("start_date").value);
-            const endDate = new Date(document.getElementById("end_date").value);
-
-            if (startDate > endDate) {
-                event.preventDefault();
-                alert("Start date cannot be after the end date.");
-            }
-        });
+        const EDIT_PROJECT_URL = "{{ url_for('edit_project') }}";
+        const DELETE_PROJECT_URL = "{{ url_for('delete_project') }}";
     </script>
-    <script src="{{ url_for('static', filename='js/project.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/project.js') }}" type="module"></script>
 {% endblock %}
-
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <script>
-                alert("{{ message }}");
-            </script>
-        {% endfor %}
-    {% endif %}
-{% endwith %}

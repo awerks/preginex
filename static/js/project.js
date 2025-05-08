@@ -1,3 +1,7 @@
+
+
+import { toast, confirmBox } from "./utils.js";
+
 function htmlTitle(html) {
     const container = document.createElement("div");
     container.style.fontFamily = window.getComputedStyle(document.body).fontFamily;
@@ -6,12 +10,13 @@ function htmlTitle(html) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
     document.querySelector(".project-form").addEventListener("submit", function (event) {
         var startDate = new Date(document.getElementById("start_date").value);
         var endDate = new Date(document.getElementById("end_date").value);
         if (startDate > endDate) {
             event.preventDefault();
-            alert("End date must be after start date.");
+            toast('End date must be after start date', 'error');
         }
     });
 
@@ -145,4 +150,116 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         })
         .catch((error) => console.error("Error fetching project data:", error));
+    document.querySelector("form").addEventListener("submit", function (event) {
+        const startDate = new Date(document.getElementById("start_date").value);
+        const endDate = new Date(document.getElementById("end_date").value);
+
+        if (startDate > endDate) {
+            event.preventDefault();
+            toast('Start date cannot be after the end date', 'error');
+            return;
+        }
+        toast('Project created successfully!', 'success');
+
+    });
+    document.querySelector(".projects-table").addEventListener("click", async function (event) {
+        if (event.target.classList.contains("btn-neutral")) {
+            const button = event.target;
+            const row = button.closest("tr");
+            const projectName = row.querySelector("td").innerText;
+            event.target
+                .closest("tr")
+                .querySelectorAll("td:first-child, td:nth-child(2)")
+                .forEach((td) => {
+                    td.contentEditable = true;
+                    td.classList.add("editable");
+                });
+            const firstEditableTd = row.querySelector("td.editable");
+            if (firstEditableTd) {
+                firstEditableTd.focus();
+            }
+            button.classList.replace("btn-neutral", "btn-success");
+            button.textContent = "Save";
+            // if click outside of the current row, cancel the edit
+            function handleOutsideClick(e) {
+                if (row.contains(e.target)) return;
+
+                row.querySelectorAll('.editable').forEach(td => {
+                    td.contentEditable = false;
+                    td.classList.remove('editable');
+                });
+                button.classList.replace('btn-success', 'btn-neutral');
+                button.textContent = 'Edit';
+                document.removeEventListener('click', handleOutsideClick, true);
+            }
+            // capture:true so we fire before table’s own click handler
+            document.addEventListener('click', handleOutsideClick, true);
+        }
+        else if (event.target.classList.contains("btn-danger")) {
+            const projectName = event.target.closest("tr").querySelector("td").innerText;
+            if (!(await confirmBox(`Delete ${projectName}?`, 'Delete'))) {
+                return;
+            }
+            fetch(DELETE_PROJECT_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    project_id: event.target.closest("tr").dataset.projectId,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        event.target.closest("tr").remove();
+                        toast('Project deleted');
+                    } else {
+                        toast(`Failed to delete project\n${data.error}`, 'error');
+                    }
+                })
+                .catch((error) => {
+                    toast('Failed to delete project', 'error');
+                });
+        }
+        else if (event.target.classList.contains("btn-success")) {
+            event.target
+                .closest("tr")
+                .querySelectorAll("td.editable")
+                .forEach((td) => {
+                    td.contentEditable = false;
+                    td.classList.remove("editable");
+                });
+            event.target.innerText = "Edit";
+            event.target.classList.remove("btn-success");
+            event.target.classList.add("btn-neutral");
+            const updatedProjectName = event.target.closest("tr").querySelector("td").innerText;
+            const updatedDescription = event.target.closest("tr").querySelector("td:nth-child(2)").innerText;
+            const project_id = event.target.closest("tr").dataset.projectId;
+            fetch(EDIT_PROJECT_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    project_name: updatedProjectName,
+                    description: updatedDescription,
+                    project_id: project_id,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        toast('Project updated');
+                    } else {
+                        toast(`Failed to update project\n${data.error}`, 'error');
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    toast('Failed to update project', 'error');
+                });
+        }
+
+    });
 });

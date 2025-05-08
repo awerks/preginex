@@ -537,6 +537,24 @@ footer {
     background-color: #4e00bb;
 }
 
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
 .btn:disabled {
     background-color: #cccccc;
     border-color: #cccccc;
@@ -746,6 +764,12 @@ h2 {
     margin-top: 2rem;
     margin-bottom: 1rem;
     color: #6200ee;
+}
+
+td.editable {
+    cursor: pointer;
+    background-color: #f0f8ff;
+    outline: 1px solid #6200ee;
 }
 
 .projects-table {

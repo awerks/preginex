@@ -1,3 +1,5 @@
+import { toast } from "./utils.js";
+
 document.addEventListener("DOMContentLoaded", function () {
     var calendarEl = document.getElementById("eventCalendar");
 
@@ -34,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
             eventApprovedby.innerText = arg.event.extendedProps.approved_by_username
                 ? "Approved by: " + arg.event.extendedProps.approved_by_username
                 : "Pending approval";
-            let userRole = "{{ session.get('role_name') }}";
+            let userRole = USER_ROLE;
             if (!arg.event.extendedProps.approved_by_username && ["Admin", "Manager"].includes(userRole)) {
                 let approveButton = document.createElement("button");
                 approveButton.innerText = "Approve";
@@ -58,28 +60,41 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     calendar.render();
+    document.querySelector("form.event-form").addEventListener("submit", function (event) {
+        const eventDate = new Date(document.getElementById("event_date").value);
+        const today = new Date();
+
+        if (eventDate < today) {
+            event.preventDefault();
+            toast("Event date cannot be in the past.", "error");
+            return;
+        }
+        toast("Event created successfully!", "success");
+    });
 });
 function approveEvent(eventId, button) {
-    fetch(`${APPROVE_EVENT_URL_BASE}${eventId}`, {
+    fetch(`${APPROVE_EVENT_URL_BASE}/${eventId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
     })
+        .then((response) => response.json())
         .then((data) => {
-            if (data.status === 200) {
+            if (data.success) {
                 button.innerText = "✅ Approved";
                 let approvedByElement = document.getElementById(eventId);
                 approvedByElement.innerText = "Approved by: " + CURRENT_USERNAME;
                 button.disabled = true;
                 button.classList.add("approved");
+                toast("Event approved successfully!", "success");
             } else {
-                alert("Error: " + data.message);
+                toast(`Failed to approve the event.\n${data.error}`, "error");
             }
             console.log("Response data:", data);
         })
         .catch((error) => {
             console.error("Error approving event:", error);
-            alert("An error occurred while approving the event.");
+            toast("An error occurred while approving the event.", "error");
         });
 }

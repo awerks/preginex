@@ -38,26 +38,7 @@
         const GET_EVENTS_URL = "{{ url_for('get_events') }}";
         const USER_ROLE = "{{ session.get('role_name', '') }}";
         const CURRENT_USERNAME = "{{ session.get('username', '') }}";
-        const APPROVE_EVENT_URL_BASE = "/approve_event/";
-        document.querySelector("form").addEventListener("submit", function (event) {
-            const eventDate = new Date(document.getElementById("event_date").value);
-            const today = new Date();
-
-            if (eventDate < today) {
-                event.preventDefault();
-                alert("Event date cannot be in the past.");
-            }
-        });
+        const APPROVE_EVENT_URL_BASE = "/approve_event";
     </script>
-    <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/calendar.js') }}" type="module"></script>
 {% endblock %}
-
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <script>
-                alert("{{ message }}");
-            </script>
-        {% endfor %}
-    {% endif %}
-{% endwith %}

@@ -1,4 +1,7 @@
+import { toast } from "./utils.js";
+
 document.addEventListener("DOMContentLoaded", function () {
+
     var taskCalendarEl = document.getElementById("taskCalendar");
 
     var isMobile = window.innerWidth < 768;
@@ -45,4 +48,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     taskCalendar.render();
+
+    document.querySelector("form.task-form").addEventListener("submit", function (event) {
+        const deadline = new Date(document.getElementById("deadline").value);
+        const today = new Date();
+
+        if (deadline < today) {
+            event.preventDefault();
+            toast("Deadline cannot be in the past.", "error");
+            return;
+        }
+        toast("Task added successfully!", "success");
+    });
 });

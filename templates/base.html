@@ -4,6 +4,7 @@
         {% include "_head.html" %}
         {% block extra_head %}
         {% endblock %}
+        
     </head>
 
     <body>
@@ -86,5 +87,20 @@
         {% endblock %}
         {% block extra_js %}
         {% endblock %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <script type="module">
+                        Swal.fire({
+                            icon: "{{ category }}",
+                            title: "{{ message }}",
+                            showConfirmButton: true,
+                            timer: 3000,
+                        });
+                    </script>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </body>
 </html>
