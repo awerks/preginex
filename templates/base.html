@@ -4,7 +4,6 @@
         {% include "_head.html" %}
         {% block extra_head %}
         {% endblock %}
-        
     </head>
 
     <body>
@@ -84,7 +83,14 @@
 
         {% block scripts %}
             <script src="{{ url_for('static', filename='js/navbar.js') }}" defer></script>
+            <script>
+                Sentry.init({
+                    dsn: "https://bd6cee1c1e85487299af017f4c6b0117@app.glitchtip.com/11317",
+                    tracesSampleRate: 0.01,
+                });
+            </script>
         {% endblock %}
+
         {% block extra_js %}
         {% endblock %}
 
