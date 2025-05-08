@@ -100,13 +100,36 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             let options = {
-
+                layout: {
+                    improvedLayout: true
+                },
+                physics: {
+                    enabled: true,
+                    solver: "forceAtlas2Based",
+                    forceAtlas2Based: {
+                        gravitationalConstant: -50,
+                        centralGravity: 0.02,
+                        springConstant: 0.02,
+                        springLength: 40,
+                        damping: 0.8,
+                        avoidOverlap: 0.5
+                    },
+                    maxVelocity: 50,
+                    minVelocity: 0.75,
+                    timestep: 0.35
+                },
                 interaction: {
                     hover: true,
                     zoomView: true,
-                    dragView: true,
+                    dragView: true
                 },
-
+                edges: {
+                    smooth: {
+                        type: "cubicBezier",
+                        forceDirection: "horizontal",
+                        roundness: 0.4
+                    }
+                }
             };
             // let options = { physics: { enabled: true }, interaction: { hover: true, zoomView: false, dragView: false } };
 

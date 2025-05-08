@@ -16,12 +16,12 @@
     <form method="POST" action="{{ url_for('request_event') }}" class="event-form">
         <div class="form-group">
             <label for="event_name">Event Name:</label>
-            <input type="text" id="event_name" name="event_name" required />
+            <input type="text" id="event_name" name="event_name" required min="2" max="60" />
         </div>
 
         <div class="form-group">
             <label for="event_description">Description:</label>
-            <textarea id="event_description" name="event_description"></textarea>
+            <textarea id="event_description" name="event_description" required minlength="2" maxlength="512"></textarea>
         </div>
 
         <div class="form-group">
@@ -39,6 +39,15 @@
         const USER_ROLE = "{{ session.get('role_name', '') }}";
         const CURRENT_USERNAME = "{{ session.get('username', '') }}";
         const APPROVE_EVENT_URL_BASE = "/approve_event/";
+        document.querySelector("form").addEventListener("submit", function (event) {
+            const eventDate = new Date(document.getElementById("event_date").value);
+            const today = new Date();
+
+            if (eventDate < today) {
+                event.preventDefault();
+                alert("Event date cannot be in the past.");
+            }
+        });
     </script>
     <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
 {% endblock %}

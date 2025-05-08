@@ -17,10 +17,10 @@
         <h2>Assign New Tasks</h2>
         <form method="POST" action="{{ url_for('create_task') }}" class="task-form">
             <label for="task_name">Task Name:</label>
-            <input type="text" id="task_name" name="task_name" required />
+            <input type="text" id="task_name" name="task_name" required minlength="2" maxlength="60" />
 
             <label for="task_description">Description:</label>
-            <textarea id="task_description" name="task_description" required></textarea>
+            <textarea id="task_description" name="task_description" required minlength="2" maxlength="60"></textarea>
 
             <label for="deadline">Deadline:</label>
             <input type="date" id="deadline" name="deadline" required />
@@ -47,6 +47,15 @@
 {% block extra_js %}
     <script>
         const GET_TASKS_URL = "{{ url_for('get_tasks') }}";
+        document.querySelector("form").addEventListener("submit", function (event) {
+            const deadline = new Date(document.getElementById("deadline").value);
+            const today = new Date();
+
+            if (deadline < today) {
+                event.preventDefault();
+                alert("Deadline cannot be in the past.");
+            }
+        });
     </script>
     <script src="{{ url_for('static', filename='js/tasks.js') }}"></script>
 {% endblock %}
