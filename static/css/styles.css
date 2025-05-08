@@ -75,6 +75,8 @@ main.container {
     color: #fff;
     font-size: 1.5rem;
     cursor: pointer;
+    border: 0;
+    background: none;
 }
 
 
@@ -403,16 +405,15 @@ footer {
 
     .nav-menu {
         position: fixed;
-        top: 60px;
+        top: 70px;
         left: 0;
         width: 100%;
-        font-size: 1.5rem;
-        height: calc(100% - 60px);
+        font-size: 1.75rem;
+        height: 100%;
         background-color: #6200ee;
         padding-top: 2rem;
         display: flex;
         flex-direction: column;
-
         gap: 1rem;
         z-index: 1000;
         transform: translateX(100%);
@@ -430,7 +431,7 @@ footer {
     }
 
     .nav-link i {
-        display: none !important;
+        display: none;
     }
 
     #profile-dropdown {
