@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var calendarEl = document.getElementById("calendar");
+    var calendarEl = document.getElementById("eventCalendar");
 
     var isMobile = window.innerWidth < 768;
     var defaultView = isMobile ? "listWeek" : "dayGridMonth";

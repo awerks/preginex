@@ -58,7 +58,7 @@ Table "schedules" {
 }
 
 Table "reset_confirm_tokens" {
-  "token" varchar(36) [not null]
+  "token" varchar(36) [pk, not null]
   "user_id" int4
   "expires_at_utc" timestamp [not null]
   "used" bool [default: false]

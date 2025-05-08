@@ -88,7 +88,9 @@ main.container {
 }
 
 
-#calendar {
+#eventCalendar,
+#eventCalendar,
+#projectGraph {
     margin-top: 2rem;
 }
 
@@ -323,6 +325,11 @@ footer {
 
 #logout-link {
     display: none;
+}
+
+#taskCalendar,
+#eventCalendar {
+    min-height: 700px;
 }
 
 .fc-event-title {
@@ -821,7 +828,6 @@ h2 {
     background-size: cover;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
 }
 
 #resetLayoutBtn {
@@ -842,7 +848,12 @@ h2 {
 
 @media (max-width: 768px) {
     #projectGraph {
-        height: 400px;
+        max-height: 350px;
+    }
+
+    #eventCalendar,
+    #taskCalendar {
+        min-height: 200px;
     }
 
     /* canvas {
