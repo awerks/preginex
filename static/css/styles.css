@@ -741,7 +741,14 @@ footer {
     }
 
     :root[data-theme="dark"] .nav-menu {
-        background-color: var(--surface-color);
+        background-color: #0e0d0d;
+    }
+
+    @supports (backdrop-filter: blur(1rem)) or (-webkit-backdrop-filter: blur(1rem)) {
+        :root[data-theme="dark"] .nav-menu {
+            background-color: #0e0d0de3;
+            backdrop-filter: blur(0.875rem);
+        }
     }
 
     .nav-menu.nav-menu_visible {
@@ -1118,8 +1125,13 @@ button,
     border-radius: 4px;
 }
 
+
 .profile-dropdown:hover .dropdown-content {
     display: block;
+}
+
+hr {
+    color: var(--input-border-color);
 }
 
 #caret-down {
