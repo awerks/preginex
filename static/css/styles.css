@@ -119,10 +119,6 @@
     --shadow-color-soft: rgba(0, 0, 0, 0.3);
     --shadow-color-medium: rgba(0, 0, 0, 0.4);
     --shadow-color-strong: rgba(0, 0, 0, 0.5);
-
-    --gradient-start: #7C5CEB;
-    --gradient-end: #613DA9;
-
     --success-color: #81c784;
     --success-hover-color: #6aa86d;
     --success-text-color: #000000;
@@ -423,6 +419,7 @@ main.container {
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
     line-height: 1.5;
+    max-width: 65ch;
     color: var(--on-surface-color);
 }
 
@@ -1558,4 +1555,16 @@ td.editable {
 .accordion.active i {
     transform: rotate(180deg);
     color: #fff;
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #824B9C 12%, #ca5dfc 35%, #9F63D4 90%, #A067E0 100%, #3C136B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="dark"] .text-gradient {
+    background-image: linear-gradient(45deg, #8B458B, #FF69B4, #FFB6C1, #FFFFFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
