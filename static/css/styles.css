@@ -258,7 +258,6 @@ body {
     background-color: var(--background-color);
     color: var(--on-background-color);
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-
 }
 
 input,
@@ -269,6 +268,13 @@ button {
     font-family: inherit;
     /* color: var(--input-text-color); */
 }
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--primary-color);
+}
+
 
 body.menu-open {
     overflow: hidden;
@@ -1197,10 +1203,6 @@ button,
     margin-bottom: 1rem;
 }
 
-.task-form textarea {
-    resize: vertical;
-    min-height: 80px;
-}
 
 .task-form button {
     background: var(--primary-color);
@@ -1288,10 +1290,6 @@ td.editable {
     margin-bottom: 1rem;
 }
 
-.project-form textarea {
-    resize: vertical;
-    min-height: 80px;
-}
 
 .table-responsive {
     width: 100%;
@@ -1407,10 +1405,12 @@ td.editable {
     margin-bottom: 1rem;
 }
 
-.event-form textarea {
+textarea {
+    font-size: 0.875rem;
     resize: vertical;
     min-height: 80px;
 }
+
 
 .analysis-section {
     background-color: var(--surface-color);
@@ -1551,9 +1551,10 @@ td.editable {
 }
 
 .faq h2 {
-    color: var(--primary-color);
+    color: var(--on-background-color);
+    text-align: center;
     margin-block: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 600;
 }
 
