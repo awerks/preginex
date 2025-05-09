@@ -228,11 +228,23 @@
     .event-form,
     .login-container,
     .faq,
-    .analysis-section) {
+    .analysis-section,
+    .navbar,
+    .footer) {
     box-shadow: none;
     outline: 1px var(--input-border-color) solid;
 }
 
+:root[data-theme="dark"] body {
+    /* fallback */
+    background-color: var(--background-color);
+    background-image: repeating-linear-gradient(135deg,
+            #222222 0%,
+            #1e1e1e 100%);
+    background-size: 300% 300%;
+    background-repeat: repeat;
+    animation: gradient-animation 20s ease infinite;
+}
 
 
 html,
@@ -248,6 +260,7 @@ body {
     color: var(--on-background-color);
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
+
 
 input,
 textarea,
@@ -407,6 +420,22 @@ main.container {
     margin-bottom: 2rem;
     min-height: 30rem;
     margin-top: 3rem;
+
+}
+
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .hero h1 {
@@ -1302,7 +1331,7 @@ td.editable {
     background-color: var(--table-row-even-bg);
 }
 
-.events-table tbody tr:hover {
+.events-table t` tr:hover {
     background-color: var(--table-row-hover-bg);
 }
 
