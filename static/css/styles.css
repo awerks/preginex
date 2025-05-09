@@ -238,19 +238,17 @@
 }
 
 :root[data-theme="dark"] body {
-    /* fallback */
-    background-color: var(--background-color);
-    background: conic-gradient(from 0deg, #121212, #1d1d1f, #232326);
-    background-size: 400% 400%;
-    background-repeat: repeat;
+    --color-bg-translucent: hsla(0, 0%, 100%, .05);
+    background-image:
+        linear-gradient(180deg, var(--color-bg-translucent), transparent 40%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
-
 
 html,
 body {
     height: 100%;
     perspective: 800px;
-
 }
 
 
@@ -292,6 +290,8 @@ main.container {
     padding: 1.25rem 1rem;
     user-select: none;
 }
+
+
 
 .nav-container {
     display: flex;
@@ -926,7 +926,8 @@ input:checked+.slider .moon {
     border-radius: 4px;
 }
 
-button {
+button,
+.btn {
     user-select: none;
 }
 
