@@ -259,6 +259,7 @@ body {
     background-color: var(--background-color);
     color: var(--on-background-color);
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+
 }
 
 
@@ -1331,7 +1332,7 @@ td.editable {
     background-color: var(--table-row-even-bg);
 }
 
-.events-table t` tr:hover {
+.events-table tbody tr:hover {
     background-color: var(--table-row-hover-bg);
 }
 
