@@ -318,6 +318,16 @@ main.container {
     cursor: pointer;
     border: 0;
     background: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-toggle i {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-toggle[aria-expanded="true"] i {
+    transform: rotate(180deg);
 }
 
 .nav-menu {
