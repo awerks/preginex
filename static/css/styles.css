@@ -457,6 +457,18 @@ main.container {
     color: var(--hero-feature-icon-color);
 }
 
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-buttons.hero-buttons>* {
+    margin: 0;
+}
+
 footer {
     background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     color: #fff;
