@@ -238,12 +238,9 @@
 :root[data-theme="dark"] body {
     /* fallback */
     background-color: var(--background-color);
-    background-image: repeating-linear-gradient(135deg,
-            #222222 0%,
-            #1e1e1e 100%);
-    background-size: 300% 300%;
+    background: conic-gradient(from 0deg, #121212, #1d1d1f, #232326);
+    background-size: 400% 400%;
     background-repeat: repeat;
-    animation: gradient-animation 20s ease infinite;
 }
 
 
@@ -425,17 +422,13 @@ main.container {
 }
 
 
-@keyframes gradient-animation {
-    0% {
-        background-position: 0% 50%;
-    }
+.spin {
+    animation: spin var(--spintime, 5s) linear infinite;
+}
 
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
+@keyframes spin {
+    to {
+        transform: rotate(1turn);
     }
 }
 
