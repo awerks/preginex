@@ -79,6 +79,7 @@
                                         </div>
                                         <a href="{{ url_for('auth.logout') }}" class="dropdown-link">Logout</a>
                                         <a href="#" id="spin-me" class="dropdown-link">Spin me</a>
+                                        <a href="#" class="dropdown-link" onclick="activatePartyMode()">Confetti!</a>
                                     </div>
                                 </div>
                             </li>
@@ -108,6 +109,9 @@
                         tracesSampleRate: 0.01,
                     });
                 });
+                function activatePartyMode() {
+                    confetti({ particleCount: 200, spread: 1000 });
+                }
             </script>
         {% endblock %}
 
