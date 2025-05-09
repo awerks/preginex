@@ -90,7 +90,7 @@
     --edit-btn-bg-color-hover: #d0d0d0;
     --light-white: #f9f9f9;
     --faq-panel-bg: #f0f0f073;
-
+    --github-btn-bg-color: #f5f3f7;
 
 }
 
@@ -180,6 +180,7 @@
     --edit-btn-bg-color: #bb86fc;
     --edit-btn-bg-color-hover: #9d4edd;
     --faq-panel-bg: #2c2c2c;
+    --github-btn-bg-color: #302c35;
 }
 
 :root[data-theme="dark"]::selection {
@@ -927,6 +928,18 @@ button {
 .btn-secondary:hover {
     background-color: var(--on-background-color);
 }
+
+.btn-github {
+    background-color: var(--github-btn-bg-color);
+    color: var(--on-background-color);
+    transition: transform 0.2s ease-in-out;
+    outline: 1px var(--input-border-color) solid;
+}
+
+.btn-github:hover {
+    transform: translateY(-2px);
+}
+
 
 .btn-google {
     background-color: var(--google-color);

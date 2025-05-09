@@ -13,9 +13,15 @@
             <span><i class="fas fa-project-diagram"></i> Project Tracking</span>
             <span><i class="fas fa-check-circle"></i> Approval Workflows</span>
         </div>
-        <a href="{{ url_for('projects') }}" class="btn btn-primary">
-            <i class="fas fa-arrow-right"></i> Explore Projects
-        </a>
+        <div>
+            <a href="{{ url_for('projects') }}" class="btn btn-primary" style="margin-right: 1rem">
+                <i class="fas fa-arrow-right"></i> Explore Projects
+            </a>
+            <a class="btn btn-github" href="https://github.com/awerks/se_project_1000" target="_blank">
+                <i class="fa-brands fa-github"></i>
+                View on GitHub
+            </a>
+        </div>
     </section>
 
     <!-- FAQ section -->
@@ -70,7 +76,7 @@
             </p>
         </div>
     </section>
-
+    <div class="text-center"></div>
     <script>
         const acc = document.getElementsByClassName("accordion");
 
