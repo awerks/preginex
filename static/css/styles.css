@@ -1576,9 +1576,7 @@ textarea {
     justify-content: space-between;
     gap: 1rem;
     background-color: var(--surface-color);
-    /*the white background*/
-    color: var(--primary-color);
-    /*the purple primary colour Illia was using*/
+    color: var(--on-background-color);
     cursor: pointer;
     border: 1px solid var(--input-border-color);
     /*making the cursor a pointer when hovering over it*/
