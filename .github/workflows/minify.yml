@@ -2,6 +2,11 @@ on:
     push:
         branches:
             - main
+        paths:
+            - "static/css/**"
+            - "static/js/**"
+            - ".github/workflows/minify.yml"
+
 permissions:
     contents: write
 jobs:
