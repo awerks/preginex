@@ -11,6 +11,7 @@ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e)
     if (!localStorage.getItem("theme")) {
         const newColorScheme = e.matches ? "dark" : "light";
         applyTheme(newColorScheme);
+
     }
 });
 
@@ -26,25 +27,29 @@ function saveThemePreference(theme) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    const themeToggle = document.getElementById("theme-checkbox");
     const spinMe = document.getElementById("spin-me");
+    const themeToggle = document.getElementById("theme-toggle");
     if (spinMe) {
         spinMe.addEventListener("click", spinFunction);
     }
     if (themeToggle) {
         const currentTheme = localStorage.getItem("theme");
         if (document.documentElement.getAttribute("data-theme") === "dark" || currentTheme === "dark") {
-            themeToggle.checked = true;
+            themeToggle.ariaLabel = "dark";
         }
-        themeToggle.addEventListener("change", function () {
-            if (this.checked) {
+        else {
+            themeToggle.ariaLabel = "light";
+        }
+
+        themeToggle.addEventListener("click", function () {
+            if (this.ariaLabel === "light") {
                 applyTheme("dark");
                 saveThemePreference("dark");
-                this.checked = true;
+                this.ariaLabel = "dark";
             } else {
                 applyTheme("light");
                 saveThemePreference("light");
-                this.checked = false;
+                this.ariaLabel = "light";
             }
         });
     }
