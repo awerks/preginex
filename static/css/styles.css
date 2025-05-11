@@ -10,9 +10,9 @@
 
 
 :root {
-    --primary-color: #6200ee;
-    --primary-variant-color: #3700b3;
-    --primary-hover-color: #4e00bb;
+    --primary-color: #a069ed;
+    --primary-variant-color: #824bb9;
+    --primary-hover-color: #824bb9;
     --secondary-color: #7b42d1c1;
     --background-color: #f4f4f4;
     --surface-color: #ffffff;
@@ -61,7 +61,7 @@
     --hero-feature-hover-bg: rgba(255, 255, 255, 0.2);
     --hero-feature-icon-color: #93c5fd;
 
-    --fc-event-title-color: #fff;
+    --fc-event-title-color: #333333;
     --fc-event-requestedby-color: #ffeb3b;
     --fc-event-approvedby-color: #00e676;
     --fc-daygrid-event-color: #db4437;
@@ -192,6 +192,25 @@
 :root[data-theme="dark"] .fc.fc .fc-list-sticky .fc-list-day>*,
 :root[data-theme="dark"] .fc.fc .fc-list-event:hover td {
     background-color: var(--surface-color);
+}
+
+:root[data-theme="dark"] .vis-tooltip {
+    background: var(--background-color);
+}
+
+:root[data-theme="light"] .fc-button-group>* {
+    background-color: var(--primary-color);
+}
+
+:root[data-theme="light"] .fc-button-group>*:hover {
+    background-color: var(--primary-hover-color);
+}
+
+:root[data-theme="light"] .fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+    background-color: rebeccapurple;
+    color: var(--on-primary-color);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 :root[data-theme="dark"] .fc.fc .fc-button-primary:not(:disabled).fc-button-active,
