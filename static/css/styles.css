@@ -687,7 +687,7 @@ footer {
     min-height: 700px;
 }
 
-.fc-event-title {
+.fc-list-event-title .fc-event-title {
     font-weight: bold;
     font-size: 1em;
     padding: 2px 5px;
