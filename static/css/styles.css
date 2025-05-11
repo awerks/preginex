@@ -226,6 +226,11 @@
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
+:root[data-theme="light"] .fc-h-event {
+    border: none;
+    background-color: var(--secondary-color)
+}
+
 :root[data-theme="dark"] .fc-h-event.fc-h-event,
 :root[data-theme="dark"] .fc-button-group>* {
     background-color: var(--cost-crashing-cell-border-color);
