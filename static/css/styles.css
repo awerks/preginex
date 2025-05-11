@@ -227,7 +227,8 @@
 }
 
 :root[data-theme="light"] .fc-h-event {
-    border: none;
+    border: 1px solid var(--primary-variant-color);
+    /* border: none; */
     background-color: var(--secondary-color)
 }
 
@@ -1581,6 +1582,10 @@ textarea {
 :root[data-theme="dark"] div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
     background: var(--primary-color);
     color: var(--on-primary-color);
+}
+
+.theme-toggle {
+    order: 100;
 }
 
 @media (max-width: 1024px) {
