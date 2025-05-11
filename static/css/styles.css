@@ -1570,6 +1570,10 @@ textarea {
     background: var(--surface-color);
 }
 
+:root[data-theme="light"] .fc-button-primary.fc-today-button {
+    background: var(--primary-color);
+}
+
 :root[data-theme="dark"] div:where(.swal2-container) h2:where(.swal2-title) {
     color: var(--on-surface-color);
 }
