@@ -1560,6 +1560,24 @@ textarea {
     -webkit-text-fill-color: transparent;
 }
 
+:root[data-theme="dark"] div:where(.swal2-container) div:where(.swal2-popup) {
+    background: var(--surface-color);
+}
+
+:root[data-theme="dark"] div:where(.swal2-container) h2:where(.swal2-title) {
+    color: var(--on-surface-color);
+}
+
+:root[data-theme="light"] div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
+    background: var(--primary-color);
+    color: var(--on-primary-color);
+}
+
+:root[data-theme="dark"] div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
+    background: var(--primary-color);
+    color: var(--on-primary-color);
+}
+
 @media (max-width: 1024px) {
 
     .nav-toggle {
