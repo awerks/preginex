@@ -1218,6 +1218,10 @@ td.editable {
         font-size: 2.5rem;
     }
 
+    .hero {
+        margin-top: 0;
+    }
+
 }
 
 .title {
