@@ -1213,6 +1213,11 @@ td.editable {
     #taskCalendar {
         min-height: 200px;
     }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
 }
 
 .title {
@@ -1420,43 +1425,45 @@ textarea {
 
 .faq-and-info {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr;
     gap: 2rem;
     margin-top: 2rem;
 }
 
 .info {
-    background-color: var(--surface-color, #f8f9fa);
+    background-color: var(--surface-color);
     padding: 2rem;
     border-radius: 1rem;
-    outline: 1px solid var(--input-border-color)
+    outline: 1px solid var(--input-border-color);
+    align-self: start;
 }
 
 .info h3 {
     font-size: 1.75rem;
-    color: var(--on-surface-color, #333);
     margin-block: 1.5rem;
     text-align: center;
 }
 
 .info>p {
-    color: var(--on-surface-variant-color, #555);
+    color: var(--on-surface-color);
     line-height: 1.6;
     text-align: center;
     margin-bottom: 1.5rem;
 }
 
 .info .email-link {
-    color: var(--primary-color, #007bff);
+    color: var(--primary-color);
     font-weight: 500;
     font-size: 0.875rem;
     text-decoration: none;
+    display: block;
+    text-align: center;
     transition: color 0.2s ease;
 }
 
 .info .email-link:hover,
 .info .email-link:focus {
-    color: var(--primary-variant-color, #0056b3);
+    color: var(--primary-variant-color);
     text-decoration: underline;
 }
 
@@ -1474,7 +1481,7 @@ textarea {
     align-items: center;
     font-size: 1rem;
     margin: 0;
-    background-color: var(--surface-color, #fff);
+    background-color: var(--surface-color);
     padding: 0.75rem 1.25rem;
     border-radius: .5rem;
     width: 100%;
@@ -1483,7 +1490,7 @@ textarea {
 
 
 .support-links p i {
-    color: var(--primary-color, #007bff);
+    color: var(--primary-color);
     margin-right: 0.75rem;
     font-size: 1.1em;
     width: 1.5em;
@@ -1491,7 +1498,7 @@ textarea {
 }
 
 .support-links p a {
-    color: var(--on-surface-color, #333);
+    color: var(--on-surface-color);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s ease;
@@ -1499,25 +1506,11 @@ textarea {
 
 .support-links p a:hover,
 .support-links p a:focus {
-    color: var(--primary-color, #007bff);
+    color: var(--primary-color);
     text-decoration: none;
 }
 
-@media screen and (min-width: 768px) {
-    .support-links {
-        flex-direction: row;
-        justify-content: center;
-        align-items: stretch;
-    }
 
-    .support-links p {
-        width: auto;
-        min-width: 280px;
-        flex: 1 1 30%;
-        max-width: 320px;
-        justify-content: flex-start;
-    }
-}
 
 /*
     FAQ Accordion Styling 
@@ -1886,6 +1879,25 @@ textarea {
     }
 }
 
+@media screen and (min-width:768px) {
+    .faq-and-info {
+        grid-template-columns: 3fr 1fr;
+    }
+
+    .support-links {
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    .support-links p {
+        width: auto;
+        min-width: 280px;
+        flex: 1 1 30%;
+        max-width: 320px;
+        justify-content: flex-start;
+    }
+}
 
 @media screen and (min-width: 1024px) {
     .card__projects {
@@ -1899,6 +1911,7 @@ textarea {
     .card__interface {
         grid-column: span 2;
     }
+
 }
 
 @media screen and (min-width: 1200px) {
