@@ -100,57 +100,86 @@
     </section>
 
     <!-- FAQ section -->
-    <section class="faq">
-        <h2>Frequently Asked Questions</h2>
+    <div class="faq-and-info">
+        <section class="faq">
+            <h3>Frequently Asked Questions</h3>
 
-        <button class="accordion" id="accordion-btn-1" aria-expanded="false" aria-controls="panel-1">
-            What is Campus Scheduler?
-            <i class="fas fa-caret-down"></i>
-        </button>
-        <div class="panel" id="panel-1" role="region" aria-labelledby="accordion-btn-1" aria-hidden="true">
-            <p>
-                Campus Scheduler is your <strong>all-in-one solution</strong> for managing everyday campus activities.
-                With it, you can schedule appointments with <em>professors, supervisors, colleagues, and more</em>. It
-                provides a comprehensive way to manage your time and stay up to date with your work by allowing you to
-                receive or assign projects and tasks, as well as leave comments on them.
-            </p>
-        </div>
+            <button class="accordion" id="accordion-btn-1" aria-expanded="false" aria-controls="panel-1">
+                What is Campus Scheduler?
+                <i class="fas fa-caret-down"></i>
+            </button>
+            <div class="panel" id="panel-1" role="region" aria-labelledby="accordion-btn-1" aria-hidden="true">
+                <p>
+                    Campus Scheduler is your <strong>all-in-one solution</strong> for managing everyday campus
+                    activities. With it, you can schedule appointments with
+                    <em>professors, supervisors, colleagues, and more</em>. It provides a comprehensive way to manage
+                    your time and stay up to date with your work by allowing you to receive or assign projects and
+                    tasks, as well as leave comments on them.
+                </p>
+            </div>
 
-        <button class="accordion" id="accordion-btn-2" aria-expanded="false" aria-controls="panel-2">
-            Why use our product?
-            <i class="fas fa-caret-down"></i>
-        </button>
-        <div class="panel" id="panel-2" role="region" aria-labelledby="accordion-btn-2" aria-hidden="true">
-            <p>
-                Our product empowers users to manage their time more efficiently than ever before. Campus Scheduler
-                offers exceptional flexibility for organizing meetings, activities, and projects with just a few simple
-                interactions.
-            </p>
-        </div>
+            <button class="accordion" id="accordion-btn-2" aria-expanded="false" aria-controls="panel-2">
+                Why use our product?
+                <i class="fas fa-caret-down"></i>
+            </button>
+            <div class="panel" id="panel-2" role="region" aria-labelledby="accordion-btn-2" aria-hidden="true">
+                <p>
+                    Our product empowers users to manage their time more efficiently than ever before. Campus Scheduler
+                    offers exceptional flexibility for organizing meetings, activities, and projects with just a few
+                    simple interactions.
+                </p>
+            </div>
 
-        <button class="accordion" id="accordion-btn-3" aria-expanded="false" aria-controls="panel-3">
-            Can I schedule meetings inside Campus Scheduler?
-            <i class="fas fa-caret-down"></i>
-        </button>
-        <div class="panel" id="panel-3" role="region" aria-labelledby="accordion-btn-3" aria-hidden="true">
-            <p>
-                <strong>Yes!</strong> Campus Scheduler allows you—<em>or your supervisor</em>—to schedule appointments
-                and meetings with ease.
-            </p>
-        </div>
+            <button class="accordion" id="accordion-btn-3" aria-expanded="false" aria-controls="panel-3">
+                Can I schedule meetings inside Campus Scheduler?
+                <i class="fas fa-caret-down"></i>
+            </button>
+            <div class="panel" id="panel-3" role="region" aria-labelledby="accordion-btn-3" aria-hidden="true">
+                <p>
+                    <strong>Yes!</strong> Campus Scheduler allows you—<em>or your supervisor</em>—to schedule
+                    appointments and meetings with ease.
+                </p>
+            </div>
 
-        <button class="accordion" id="accordion-btn-4" aria-expanded="false" aria-controls="panel-4">
-            Can I set deadlines for my employees?
-            <i class="fas fa-caret-down"></i>
-        </button>
-        <div class="panel" id="panel-4" role="region" aria-labelledby="accordion-btn-4" aria-hidden="true">
-            <p>
-                <strong>Yes!</strong> Campus Scheduler enables project managers to
-                <em>set deadlines for their employees</em>. Everyone can view these deadlines on the shared calendar and
-                see how much time remains before they are due.
-            </p>
-        </div>
-    </section>
+            <button class="accordion" id="accordion-btn-4" aria-expanded="false" aria-controls="panel-4">
+                Can I set deadlines for my employees?
+                <i class="fas fa-caret-down"></i>
+            </button>
+            <div class="panel" id="panel-4" role="region" aria-labelledby="accordion-btn-4" aria-hidden="true">
+                <p>
+                    <strong>Yes!</strong> Campus Scheduler enables project managers to
+                    <em>set deadlines for their employees</em>. Everyone can view these deadlines on the shared calendar
+                    and see how much time remains before they are due.
+                </p>
+            </div>
+        </section>
+        <section class="info">
+            <h3>Need help?</h3>
+            <p>If you have any questions or need assistance, please reach out to us at</p>
+            <a href="mailto:business@constructor.university" class="email-link" target="_blank">
+                business@constructor.university
+            </a>
+            <div class="support-links">
+                <p>
+                    <i class="fas fa-book"></i>
+                    <a
+                        href="https://app.swaggerhub.com/apis/softwareproject-afb/Software_project/1.0.0#"
+                        target="_blank"
+                        >Read our documentation</a
+                    >
+                </p>
+                <p>
+                    <i class="fab fa-github"></i>
+                    <a href="https://github.com/awerks/se_project_1000/issues" target="_blank">Report an issue</a>
+                </p>
+                <p>
+                    <i class="fas fa-code"></i>
+                    <a href="https://github.com/awerks/se_project_1000/pulls" target="_blank">Contribute</a>
+                </p>
+            </div>
+        </section>
+    </div>
+
     {% block extra_js %}
         <script src="{{ url_for('static', filename='js/index.js') }}"></script>
     {% endblock %}

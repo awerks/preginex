@@ -1418,18 +1418,118 @@ textarea {
     background-color: var(--cost-crashing-row-hover-bg);
 }
 
+.faq-and-info {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.info {
+    background-color: var(--surface-color, #f8f9fa);
+    padding: 2rem;
+    border-radius: 1rem;
+    outline: 1px solid var(--input-border-color)
+}
+
+.info h3 {
+    font-size: 1.75rem;
+    color: var(--on-surface-color, #333);
+    margin-block: 1.5rem;
+    text-align: center;
+}
+
+.info>p {
+    color: var(--on-surface-variant-color, #555);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.info .email-link {
+    color: var(--primary-color, #007bff);
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.info .email-link:hover,
+.info .email-link:focus {
+    color: var(--primary-variant-color, #0056b3);
+    text-decoration: underline;
+}
+
+.support-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.support-links p {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    margin: 0;
+    background-color: var(--surface-color, #fff);
+    padding: 0.75rem 1.25rem;
+    border-radius: .5rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+
+.support-links p i {
+    color: var(--primary-color, #007bff);
+    margin-right: 0.75rem;
+    font-size: 1.1em;
+    width: 1.5em;
+    text-align: center;
+}
+
+.support-links p a {
+    color: var(--on-surface-color, #333);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.support-links p a:hover,
+.support-links p a:focus {
+    color: var(--primary-color, #007bff);
+    text-decoration: none;
+}
+
+@media screen and (min-width: 768px) {
+    .support-links {
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    .support-links p {
+        width: auto;
+        min-width: 280px;
+        flex: 1 1 30%;
+        max-width: 320px;
+        justify-content: flex-start;
+    }
+}
+
 /*
     FAQ Accordion Styling 
 */
 .faq {
-    margin: 2rem 0;
     padding: 2rem;
     background-color: var(--surface-color);
-    border-radius: 8px;
+    border-radius: 1rem;
     box-shadow: 0 0 10px var(--shadow-color-soft);
 }
 
-.faq h2 {
+.faq h3 {
     color: var(--on-background-color);
     text-align: center;
     margin-block: 1.5rem;
