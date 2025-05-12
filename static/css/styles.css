@@ -485,6 +485,19 @@ header {
 
 }
 
+.hero-title {
+    position: relative;
+}
+
+.hero-title svg {
+    position: absolute;
+    bottom: -1.75rem;
+    left: -1rem;
+    width: 300px;
+    fill: var(--primary-color);
+}
+
+
 .spin {
     transform-style: preserve-3d;
     transform-origin: center center;
@@ -531,9 +544,10 @@ header {
 }
 
 .hero h1 {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     font-size: 4rem;
     color: var(--on-surface-color);
+    text-wrap: balance;
 }
 
 .hero p {
@@ -1879,6 +1893,7 @@ textarea {
     transition: background-color 0.2s, color 0.2s;
 }
 
+
 @supports (cx: 1) {
     :root[data-theme="dark"] .sun-and-moon>.moon>circle {
         cx: 17;
@@ -2011,6 +2026,8 @@ textarea {
         width: 100px;
     }
 
+
+
     :root[data-theme="dark"] .nav-menu {
         background-color: #0e0d0d;
     }
@@ -2059,7 +2076,6 @@ textarea {
     }
 }
 
-
 @media (max-width: 768px) {
     #projectGraph {
         max-height: 350px;
@@ -2071,15 +2087,24 @@ textarea {
     }
 
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 3rem;
+        margin-bottom: 3.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        text-wrap: balance;
     }
 
     .hero {
-        margin-top: 0;
+        margin-top: 2rem;
     }
 
     .get-started h3 {
         font-size: 2.5rem;
     }
 
+    .hero-title svg {
+        width: 200px;
+    }
 }
