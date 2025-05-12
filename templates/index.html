@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body_class %}home-page{% endblock %}
-{% block title %}Home - Campus Scheduler{% endblock %}
+{% block title %}Home - ProjeX{% endblock %}
 {% block content %}
     <div class="gradient-circle"></div>
     <div class="gradient-circle"></div>
@@ -105,16 +105,15 @@
             <h3>Frequently Asked Questions</h3>
 
             <button class="accordion" id="accordion-btn-1" aria-expanded="false" aria-controls="panel-1">
-                What is Campus Scheduler?
+                What is ProjeX?
                 <i class="fas fa-caret-down"></i>
             </button>
             <div class="panel" id="panel-1" role="region" aria-labelledby="accordion-btn-1" aria-hidden="true">
                 <p>
-                    Campus Scheduler is your <strong>all-in-one solution</strong> for managing everyday campus
-                    activities. With it, you can schedule appointments with
-                    <em>professors, supervisors, colleagues, and more</em>. It provides a comprehensive way to manage
-                    your time and stay up to date with your work by allowing you to receive or assign projects and
-                    tasks, as well as leave comments on them.
+                    ProjeX is your <strong>all-in-one solution</strong> for managing everyday campus activities. With
+                    it, you can schedule appointments with <em>professors, supervisors, colleagues, and more</em>. It
+                    provides a comprehensive way to manage your time and stay up to date with your work by allowing you
+                    to receive or assign projects and tasks, as well as leave comments on them.
                 </p>
             </div>
 
@@ -124,20 +123,20 @@
             </button>
             <div class="panel" id="panel-2" role="region" aria-labelledby="accordion-btn-2" aria-hidden="true">
                 <p>
-                    Our product empowers users to manage their time more efficiently than ever before. Campus Scheduler
-                    offers exceptional flexibility for organizing meetings, activities, and projects with just a few
-                    simple interactions.
+                    Our product empowers users to manage their time more efficiently than ever before. ProjeX offers
+                    exceptional flexibility for organizing meetings, activities, and projects with just a few simple
+                    interactions.
                 </p>
             </div>
 
             <button class="accordion" id="accordion-btn-3" aria-expanded="false" aria-controls="panel-3">
-                Can I schedule meetings inside Campus Scheduler?
+                Can I schedule meetings inside ProjeX?
                 <i class="fas fa-caret-down"></i>
             </button>
             <div class="panel" id="panel-3" role="region" aria-labelledby="accordion-btn-3" aria-hidden="true">
                 <p>
-                    <strong>Yes!</strong> Campus Scheduler allows you—<em>or your supervisor</em>—to schedule
-                    appointments and meetings with ease.
+                    <strong>Yes!</strong> ProjeX allows you—<em>or your supervisor</em>—to schedule appointments and
+                    meetings with ease.
                 </p>
             </div>
 
@@ -147,9 +146,9 @@
             </button>
             <div class="panel" id="panel-4" role="region" aria-labelledby="accordion-btn-4" aria-hidden="true">
                 <p>
-                    <strong>Yes!</strong> Campus Scheduler enables project managers to
-                    <em>set deadlines for their employees</em>. Everyone can view these deadlines on the shared calendar
-                    and see how much time remains before they are due.
+                    <strong>Yes!</strong> ProjeX enables project managers to <em>set deadlines for their employees</em>.
+                    Everyone can view these deadlines on the shared calendar and see how much time remains before they
+                    are due.
                 </p>
             </div>
         </section>
@@ -179,6 +178,11 @@
             </div>
         </section>
     </div>
+
+    <section class="get-started">
+        <h3>The future of project management is now</h3>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-signup">Get started with ProjeX</a>
+    </section>
 
     {% block extra_js %}
         <script src="{{ url_for('static', filename='js/index.js') }}"></script>
