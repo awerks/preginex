@@ -1,4 +1,4 @@
-import { toast } from "./utils.js";
+import { toast, confirmBox } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -46,7 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const deleteButton = document.createElement("button");
                 deleteButton.innerText = "Delete";
                 deleteButton.classList.add("fc-delete-btn");
-                deleteButton.onclick = function () {
+                deleteButton.onclick = async function () {
+                    if (!(await confirmBox(`Delete ${arg.event.title}?`, 'Delete'))) {
+                        return;
+                    }
                     deleteTask(arg.event.extendedProps.task_id);
                 };
                 return { domNodes: [title, assignedTo, status, deleteButton] };
@@ -124,6 +127,7 @@ function completeTask(taskId, button) {
 }
 
 function deleteTask(taskId) {
+
     fetch(`${DELETE_TASK_URL}/${taskId}`, {
         method: "DELETE",
         headers: {
