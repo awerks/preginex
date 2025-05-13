@@ -4,7 +4,7 @@
 {% block content %}
     <div class="login-container">
         <h2>Register</h2>
-        <form method="POST" action="{{ url_for('auth.register') }}" onsubmit="return validateForms()">
+        <form method="POST" action="{{ url_for('auth.register') }}">
             <div class="form-group">
                 <label for="first_name">First Name <span style="color: red;">*</span></label>
                 <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name" />
@@ -76,39 +76,9 @@
         {% endif %}
     </div>
 
-    <script>
-        function validateForms() {
-            let password = document.getElementById("password").value;
-            let username = document.getElementById("username").value;
-            let confirmPassword = document.getElementById("confirm_password").value;
-            let passwordError = document.getElementById("password-error");
+    <script type="module">
+        import { toast } from "{{ url_for('static', filename='js/utils.js') }}";
 
-            if (password !== confirmPassword) {
-                passwordError.style.display = "block";
-                return false;
-            } else {
-                passwordError.style.display = "none";
-            }
-            fetch("{{ url_for('auth.check_username') }}", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username: username }),
-            })
-                .then((response) => response.json())
-                .then((username) => {
-                    return !username.exists;
-                });
-            fetch("{{ url_for('auth.check_email') }}", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email }),
-            })
-                .then((response) => response.json())
-                .then((email) => {
-                    return !email.exists;
-                });
-            return true;
-        }
         // Real-time validation for matching passwords
         document.getElementById("confirm_password").addEventListener("input", function () {
             let password = document.getElementById("password").value;
@@ -169,6 +139,20 @@
                         errorEl.style.display = "none";
                     }
                 });
+        });
+        document.querySelector("form").addEventListener("submit", function (event) {
+            const emailError = document.getElementById("email-error");
+            const usernameError = document.getElementById("username-error");
+            const birthday = document.getElementById("birthday_date").value;
+            const today = new Date();
+            if (emailError.style.display === "block" || usernameError.style.display === "block") {
+                event.preventDefault();
+                toast("Please fix the errors before submitting.", "error");
+            }
+            if (new Date(birthday) > today) {
+                event.preventDefault();
+                toast("Date of birth cannot be in the future.", "error");
+            }
         });
     </script>
 {% endblock %}

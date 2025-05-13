@@ -36,3 +36,21 @@
         </div>
     </div>
 {% endblock %}
+{% block extra_js %}
+    {% if error %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                setTimeout(() => {
+                    Swal.fire({
+                        toast: true,
+                        position: "bottom-end",
+                        icon: "error",
+                        title: "{{ error }}",
+                        showConfirmButton: false,
+                        timer: 2200,
+                    });
+                }, 0);
+            });
+        </script>
+    {% endif %}
+{% endblock %}

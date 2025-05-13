@@ -89,6 +89,12 @@
                                                 >{{ session.get('username', 'Profile') }}</span
                                             >
                                             <span class="profile-username">{{ session.get('role_name', 'User') }}</span>
+                                            {% if not session.get('confirmed') %}
+                                                <span class="profile-unconfirmed">Not confirmed</span>
+                                            {% else %}
+                                                <span class="profile-confirmed">Confirmed</span>
+                                            {% endif %}
+                                            
                                         </div>
                                     </div>
                                     <hr />

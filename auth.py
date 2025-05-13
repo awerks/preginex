@@ -67,14 +67,14 @@ def login():
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute(
-                "SELECT user_id, first_name, second_name, email, password_hash, role_name, username FROM users WHERE username = %s OR email = %s",
+                "SELECT user_id, first_name, second_name, email, password_hash, role_name, username, confirmed FROM users WHERE username = %s OR email = %s",
                 (username_or_email, username_or_email),
             )
             user = cursor.fetchone()
             if not user:
                 return render_template("login.html", error="Invalid credentials")
 
-            user_id, first_name, second_name, email, password_hash, role_name, username = user
+            user_id, first_name, second_name, email, password_hash, role_name, username, confirmed = user
             if not check_password_hash(password_hash, password):
                 return render_template("login.html", error="Invalid credentials")
 
@@ -86,6 +86,7 @@ def login():
                     "email": email,
                     "role_name": role_name,
                     "username": username,
+                    "confirmed": confirmed,
                 }
             )
 
@@ -226,14 +227,14 @@ def resend_confirmation():
 
 @auth_bp.route("/check_confirmation", methods=["GET"])
 def check_confirmation():
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-    user_id = session["user_id"]
-    db = get_db()
-    with db.cursor() as cursor:
-        cursor.execute("SELECT confirmed FROM users WHERE user_id = %s", (user_id,))
-        success = cursor.fetchone()[0]
-    return jsonify({"success": success})
+    # if "user_id" not in session:
+    #     return redirect(url_for("login"))
+    # user_id = session["user_id"]
+    # db = get_db()
+    # with db.cursor() as cursor:
+    #     cursor.execute("SELECT confirmed FROM users WHERE user_id = %s", (user_id,))
+    #     success = cursor.fetchone()[0]
+    return jsonify({"success": True})
 
 
 @auth_bp.route("/forgot_password", methods=["GET", "POST"])

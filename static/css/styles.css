@@ -1103,6 +1103,20 @@ button,
     color: var(--on-surface-color);
 }
 
+.profile-confirmed {
+    color: var(--success-color);
+    font-size: 0.8rem;
+}
+
+.profile-unconfirmed {
+    color: var(--danger-color);
+    font-size: 0.8rem;
+}
+
+.profile-unconfirmed:hover {
+    color: var(--danger-hover-color);
+}
+
 .profile-email {
     font-size: 0.9rem;
     color: var(--medium-emphasis-text-color);
