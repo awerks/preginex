@@ -387,14 +387,15 @@ body.home-page main {
 }
 
 header {
+    backdrop-filter: blur(5px);
     position: sticky;
     top: 0rem;
     z-index: 1000;
 }
 
-@media (prefers-reduced-transparency: no-preference) {
+@media (prefers-reduced-transparency: reduce) {
     header {
-        backdrop-filter: blur(5px);
+        backdrop-filter: none;
     }
 
 }
@@ -2160,6 +2161,7 @@ textarea {
     @media (prefers-reduced-transparency: reduce) {
         :root[data-theme="dark"] .nav-menu {
             background-color: var(--background-color);
+            backdrop-filter: none;
         }
     }
 
