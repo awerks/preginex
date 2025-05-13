@@ -185,6 +185,8 @@
     --github-btn-bg-color: #302c35;
 }
 
+
+
 :root[data-theme="dark"]::selection {
     background: var(--primary-color);
     color: var(--on-primary-color);
@@ -277,6 +279,57 @@
 
 }
 
+@media (prefers-contrast: more) {
+    :root {
+        --background-color: #ffffff;
+        --surface-color: #ffffff;
+        --on-background-color: #000000;
+        --on-surface-color: #000000;
+
+        --primary-color: #7a1fa2;
+        --primary-variant-color: #4a0072;
+        --primary-hover-color: #4a0072;
+
+        --link-color: #000000;
+        --link-hover-bg-color: rgba(0, 0, 0, 0.1);
+
+        --table-header-bg: #e0e0e0;
+        --table-border-light: #999999;
+        --table-border-dark: #666666;
+
+        --input-border-color: #000000;
+        --shadow-color-soft: rgba(0, 0, 0, 0.2);
+        --shadow-color-medium: rgba(0, 0, 0, 0.3);
+        --shadow-color-strong: rgba(0, 0, 0, 0.4);
+    }
+
+    :root[data-theme='dark'] {
+        --background-color: #000000;
+        --surface-color: #000000;
+        --on-background-color: #ffffff;
+        --on-surface-color: #ffffff;
+
+        --primary-color: #d0bcff;
+        --primary-variant-color: #eaddff;
+        --primary-hover-color: #eaddff;
+
+        --link-color: #bb86fc;
+        --link-hover-bg-color: rgba(255, 255, 255, 0.1);
+
+        --table-header-bg: #1f1f1f;
+        --table-border-light: #444444;
+        --table-border-dark: #666666;
+
+        --input-border-color: #ffffff;
+        --input-text-color: #ffffff;
+
+        --shadow-color-soft: rgba(0, 0, 0, 0.5);
+        --shadow-color-medium: rgba(0, 0, 0, 0.6);
+        --shadow-color-strong: rgba(0, 0, 0, 0.7);
+    }
+}
+
+
 html,
 body {
     height: 100%;
@@ -330,7 +383,13 @@ header {
     position: sticky;
     top: 0rem;
     z-index: 1000;
-    backdrop-filter: blur(5px);
+}
+
+@media (prefers-reduced-transparency: no-preference) {
+    header {
+        backdrop-filter: blur(5px);
+    }
+
 }
 
 .navbar {
@@ -2042,10 +2101,14 @@ textarea {
         background-color: #0e0d0d;
     }
 
-    @supports (backdrop-filter: blur(1rem)) or (-webkit-backdrop-filter: blur(1rem)) {
+    :root[data-theme="dark"] .nav-menu {
+        background-color: #0e0d0ddf;
+        backdrop-filter: blur(5px);
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
         :root[data-theme="dark"] .nav-menu {
-            background-color: #0e0d0ddf;
-            backdrop-filter: blur(5px);
+            background-color: var(--background-color);
         }
     }
 
