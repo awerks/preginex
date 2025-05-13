@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>New Task Assigned</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <meta property="og:title" content="ProjeX" />
+        <meta property="og:description" content="Create and manage your events and tasks easily." />
+        <meta property="og:image" content="https://preginex.fun/static/images/favicon.ico" />
+        <meta property="og:url" content="https://preginex.fun" />
+        <meta property="og:type" content="website" />
+        <meta name="author" content="awerks" />
+        <style>
+            body {
+                background-color: #f4f4f4;
+                font-family: "Montserrat", sans-serif;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                background-color: #ffffff;
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                text-align: left;
+            }
+            .header {
+                font-size: 24px;
+                font-weight: 600;
+                color: #8b4eee;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .task-details p {
+                margin-bottom: 12px;
+                line-height: 1.6;
+                font-size: 16px;
+            }
+            .task-details strong {
+                color: #495057;
+                min-width: 120px;
+                display: inline-block;
+            }
+            .task-description {
+                background-color: #f4f4f4;
+                padding: 10px 15px;
+                border-radius: 4px;
+                margin-top: 5px;
+                font-style: italic;
+            }
+            .footer {
+                margin-top: 30px;
+                text-align: center;
+                font-size: 14px;
+                color: #6c757d;
+            }
+            .button {
+                display: inline-block;
+                background-color: #9b76ef !important;
+                color: #ffffff !important;
+                padding: 12px 25px;
+                text-decoration: none !important;
+                border-radius: 5px;
+                font-size: 16px;
+                font-weight: 500;
+                margin-top: 20px;
+                transition: background-color 0.2s ease-in-out;
+            }
+            .button:hover {
+                background-color: #8b4eee !important;
+            }
+            .icon {
+                margin-right: 8px;
+                color: #007bff;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2 class="header">📋 New Task Assigned</h2>
+
+            <p style="font-size: 17px; margin-bottom: 25px; text-align: center;">
+                Hello, a new task has been assigned to you.
+            </p>
+
+            <div class="task-details">
+                <p><strong>Task Name:</strong> {{ task_name }}</p>
+                <p><strong>Deadline:</strong> {{ deadline if deadline else 'Not set' }}</p>
+                <p><strong>Description:</strong></p>
+                <div class="task-description">
+                    {{ task_description|safe if task_description else 'No description provided.' }}
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="{{ url_for('tasks', _external=True) }}" class="button">View Your Tasks</a>
+            </div>
+
+            <div class="footer">
+                <p>This is an automated notification from ProjeX.</p>
+                <p>&copy; {{ now().year }} ProjeX. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,7 +1,7 @@
 import logging
 import os
 import sentry_sdk
-from datetime import datetime
+from datetime import date, datetime
 from flask import Flask, flash, jsonify, render_template, redirect, url_for, session, request
 from auth import auth_bp, login_required, admin_or_manager_required, google_bp
 from db import close_db, get_db
@@ -10,7 +10,7 @@ from flask_dance.contrib.google import google
 from sys import stdout
 from werkzeug.middleware.proxy_fix import ProxyFix
 from sentry_sdk.integrations.flask import FlaskIntegration
-
+from utils import send_email
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
@@ -297,6 +297,25 @@ def create_task():
             )
             db.commit()
         logger.info("Task created successfully")
+        with db.cursor() as cursor:
+            cursor.execute("SELECT email FROM users WHERE user_id = %s", (assigned_to,))
+            assigned_to_email = cursor.fetchone()
+            if assigned_to_email:
+                assigned_to_email = assigned_to_email[0].strip()
+                logger.info(f"Sending email to {assigned_to_email}")
+                send_email(
+                    subject="New Task Assigned",
+                    to_address=assigned_to_email,
+                    html_body=render_template(
+                        "email/task_assigned.html",
+                        task_name=task_name,
+                        task_description=task_description,
+                        deadline=deadline,
+                    ),
+                )
+            else:
+                logger.info(f"Assigned user with ID {assigned_to} does not exist.")
+
         return redirect(url_for("tasks"))
 
 

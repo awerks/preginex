@@ -1,10 +1,26 @@
 import smtplib
 import os
+import threading
+import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+logger = logging.getLogger(__name__)
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
 
-def send_email(to_address, subject, html_body):
+
+def run_in_thread(func, *args, **kwargs):
+
+    thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+    thread.start()
+    return thread
+
+
+def _send_email_sync(to_address, subject, html_body):
     smtp_server = os.environ.get("SMTP_SERVER")
     smtp_port = int(os.environ.get("SMTP_PORT"))
     smtp_username = os.environ.get("SMTP_USERNAME")
@@ -23,3 +39,14 @@ def send_email(to_address, subject, html_body):
     with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=5) as server:
         server.login(smtp_username, smtp_password)
         server.sendmail(from_address, to_address, message.as_string())
+
+
+def send_email(to_address, subject, html_body):
+    if not all([to_address, subject, html_body]):
+        logger.error("Missing required parameters to send email.")
+        return
+
+    try:
+        run_in_thread(_send_email_sync, to_address, subject, html_body)
+    except Exception as e:
+        logger.error(f"Failed to send email: {e}")
