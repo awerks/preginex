@@ -66,6 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             "<span style='color: #e91e63;'><i class='fas fa-info-circle'></i> Task Description: " +
                             task.description +
                             "</span><br>" +
+                            "<span style='color: #e04cd1;'><i class='fas fa-user'></i> Assigned to: " +
+                            task.assigned_username +
+                            "</span><br>" +
                             "<span style='color: #3f51b5;'><i class='fas fa-calendar-alt'></i> Deadline: " +
                             task.end +
                             "</span><br>" +
@@ -74,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 ? "#4caf50"
                                 : task.status === "Pending"
                                     ? "#ff9800"
-                                    : "#2196f3") +
+                                    : "#FF0000") +
                             ";'><i class='fas fa-check'></i> Status: " +
                             task.status +
                             "</span>",
@@ -85,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 ? "#4caf50"
                                 : task.status === "Pending"
                                     ? "#ff9800"
-                                    : "#2196f3",
+                                    : "#FF0000",
                         font: { color: "#ffffff", size: 14 },
                         borderWidth: 1,
                     });

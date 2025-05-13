@@ -95,6 +95,9 @@
     --github-btn-bg-color: #f5f3f7;
 
     --navbar-height: 4.5rem;
+    --fc-task-asssigned-color: #ff9800;
+    --fc-task-status-color: #23ecd5;
+    --fc-task-status-completed-color: #4cf154;
 
 }
 
@@ -183,6 +186,10 @@
     --edit-btn-bg-color-hover: #9d4edd;
     --faq-panel-bg: #2c2c2c;
     --github-btn-bg-color: #302c35;
+
+    --fc-task-asssigned-color: #ffd54f;
+    --fc-task-status-color: #ff5252;
+    --fc-task-status-completed-color: #81c784;
 }
 
 
@@ -469,10 +476,11 @@ header {
 }
 
 .legend-item {
-    display: inline-block;
+    display: inline-flex;
     vertical-align: middle;
     margin-right: 15px;
     text-align: center;
+    align-items: center;
 }
 
 .legend-color {
@@ -493,6 +501,10 @@ header {
 
 .legend-completed {
     background-color: var(--success-color);
+}
+
+.legend-failed {
+    background-color: var(--danger-color);
 }
 
 .nav-item {
@@ -793,6 +805,43 @@ footer {
     padding-top: 2px;
 }
 
+.fc-delete-btn {
+    background-color: var(--danger-color);
+    color: var(--danger-text-color);
+    border: none;
+    padding: 5px 8px;
+    font-size: 0.85em;
+    cursor: pointer;
+    margin-top: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.fc-delete-btn:hover {
+    background-color: var(--danger-hover-color);
+}
+
+.fc-task-assigned {
+    font-size: 0.85em;
+    color: var(--fc-event-requestedby-color);
+    font-style: italic;
+    padding-top: 2px;
+}
+
+.fc-task-status {
+    font-size: 0.85em;
+    color: var(--fc-task-status-color);
+    padding-top: 2px;
+}
+
+.fc-task-status.completed {
+    color: var(--fc-task-status-completed-color);
+}
+
+.fc-task.status.failed {
+    color: var(--danger-color);
+}
+
 .fc-daygrid-event {
     white-space: normal !important;
     word-wrap: break-word;
@@ -821,8 +870,10 @@ footer {
     background-color: var(--success-hover-color);
 }
 
-.fc-approve-btn.approved {
+.fc-approve-btn.approved,
+.fc-approve-btn.completed {
     cursor: not-allowed;
+    opacity: .8;
 }
 
 .mobile-text {

@@ -62,6 +62,10 @@
 {% block extra_js %}
     <script>
         const GET_TASKS_URL = "{{ url_for('get_tasks') }}";
+        const COMPLETE_TASK_URL = "/api/tasks";
+        const DELETE_TASK_URL = "/api/tasks";
+        const USER_ROLE = "{{ session.get('role_name', 'Worker') }}";
+        const USERNAME = "{{ session.get('username', 'Worker') }}";
     </script>
     <script src="{{ url_for('static', filename='js/tasks.js') }}" type="module"></script>
 {% endblock %}

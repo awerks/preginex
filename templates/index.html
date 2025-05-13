@@ -56,9 +56,16 @@
             <span><i class="fas fa-check-circle"></i> Approval Workflows</span>
         </div> -->
         <div class="hero-buttons">
-            <a href="{{ url_for('projects') }}" class="btn btn-primary">
-                <i class="fas fa-arrow-right"></i> Explore Projects
-            </a>
+            {% if session.get('role_name') in ['Admin', 'Manager'] %}
+                <a href="{{ url_for('projects') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Explore Projects
+                </a>
+            {% else %}
+                <a href="{{ url_for('events') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Explore Events
+                </a>
+            {% endif %}
+
             <a class="btn btn-github" href="https://github.com/awerks/se_project_1000" target="_blank">
                 <i class="fa-brands fa-github"></i>
                 View on GitHub

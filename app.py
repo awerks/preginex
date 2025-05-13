@@ -2,7 +2,7 @@ import logging
 import os
 import sentry_sdk
 from datetime import datetime
-from flask import Flask, jsonify, render_template, redirect, url_for, session, request
+from flask import Flask, flash, jsonify, render_template, redirect, url_for, session, request
 from auth import auth_bp, login_required, admin_or_manager_required, google_bp
 from db import close_db, get_db
 from psycopg2.extras import RealDictCursor
@@ -156,7 +156,7 @@ def create_project():
 
     if not all([project_name, description, start_date_str, end_date_str]):
         logger.info("Missing required fields for project creation")
-        return jsonify(error="Missing required fields."), 400
+        flash("Missing required fields.", "error")
 
     try:
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
@@ -264,7 +264,7 @@ def create_task():
 
         if not all([task_name, task_description, deadline_str, assigned_to_str, project_id_str]):
             logger.info("Missing required fields for task creation")
-            return jsonify(error="Missing required fields."), 400
+            flash("Missing required fields.", "error")
 
         try:
             deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
@@ -272,22 +272,22 @@ def create_task():
             project_id = int(project_id_str)
         except ValueError:
             logger.info("Invalid format for deadline, assigned_to, or project_id.")
-            return jsonify(error="Invalid format for deadline, assigned_to, or project_id."), 400
+            flash("Invalid format for deadline, assigned_to, or project_id.", "error")
 
         if deadline < datetime.now().date():
             logger.info("Deadline cannot be in the past for task creation.")
-            return jsonify(error="Deadline cannot be in the past."), 400
+            flash("Deadline cannot be in the past.", "error")
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute("SELECT project_id FROM projects WHERE project_id = %s", (project_id,))
             if cursor.fetchone() is None:
                 logger.info(f"Attempted to create task for non-existent project_id: {project_id}")
-                return jsonify(error="Project does not exist."), 400
+                flash("Project does not exist.", "error")
 
             cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (assigned_to,))
             if cursor.fetchone() is None:
                 logger.info(f"Attempted to assign task to non-existent user_id: {assigned_to}")
-                return jsonify(error="User does not exist."), 400
+                flash("User does not exist.", "error")
 
         db = get_db()
         with db.cursor() as cursor:
@@ -300,6 +300,22 @@ def create_task():
         return redirect(url_for("tasks"))
 
 
+@app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
+@login_required
+@admin_or_manager_required
+def delete_task(task_id):
+    db = get_db()
+    if not task_id:
+        logger.info("Task ID not provided for deletion")
+        return jsonify(error="Task ID not provided."), 400
+
+    with db.cursor() as cursor:
+        cursor.execute("DELETE FROM tasks WHERE task_id = %s", (task_id,))
+        db.commit()
+    logger.info(f"Task with ID {task_id} deleted successfully")
+    return jsonify(success=True), 200
+
+
 @app.route("/api/projects", methods=["GET"])
 @login_required
 @admin_or_manager_required
@@ -310,26 +326,29 @@ def get_projects():
             """
             SELECT json_agg(
                 json_build_object(
-                    'project_id', project_id,
-                    'project_name', project_name,
-                    'description', description,
-                    'start', start_date,
-                    'end', end_date,
-                    'manager', users.username,
+                    'project_id', p.project_id,
+                    'project_name', p.project_name,
+                    'description', p.description,
+                    'start', p.start_date,
+                    'end', p.end_date,
+                    'manager', u_manager.username,
                     'tasks', (
                         SELECT json_agg(
                             json_build_object(
-                                'task_id', task_id,
-                                'task_name', task_name,
-                                'description', task_description,
-                                'end', deadline,
-                                'status', status
+                                'task_id', t.task_id,
+                                'task_name', t.task_name,
+                                'description', t.task_description,
+                                'end', t.deadline,
+                                'status', t.status,
+                                'assigned_username', u_task.username -- Added assigned_username
                             )
-                        ) FROM tasks WHERE project_id = projects.project_id
+                        ) FROM tasks t
+                        LEFT JOIN users u_task ON t.assigned_to = u_task.user_id 
+                        WHERE t.project_id = p.project_id
                     )
-    
                 )
-            ) FROM projects JOIN users ON projects.manager_id = users.user_id
+            ) FROM projects p
+            JOIN users u_manager ON p.manager_id = u_manager.user_id
         """
         )
         projects = cursor.fetchone()[0]
@@ -341,23 +360,50 @@ def get_projects():
 @login_required
 def get_tasks():
     db = get_db()
-    with db.cursor() as cursor:
-        cursor.execute(
-            """
-            SELECT json_agg(
-                json_build_object(
-                    'task_id', task_id,
-                    'title', task_name,
-                    'description', task_description,
-                    'start', deadline,
-                    'project_id', project_id,
-                    'status', status
-                )
-            ) FROM tasks WHERE assigned_to = %s
-        """,
-            (session["user_id"],),
-        )
-        result = cursor.fetchone()[0]
+    if session["role_name"] in ["Admin", "Manager"]:
+        with db.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT json_agg(
+                    json_build_object(
+                        'task_id', task_id,
+                        'title', task_name,
+                        'description', task_description,
+                        'start', deadline,
+                        'project_id', project_id,
+                        'assigned_username', u.username,
+                        'status', status
+                    )
+                ) FROM tasks t
+                LEFT JOIN users u ON t.assigned_to = u.user_id
+            """,
+                (session.get("user_id"),),
+            )
+            result = cursor.fetchone()[0]
+
+    else:
+        with db.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT json_agg(
+                    json_build_object(
+                        'task_id', task_id,
+                        'title', task_name,
+                        'description', task_description,
+                        'start', deadline,
+                        'project_id', project_id,
+                        'assigned_username', %s,
+                        'status', status
+                    )
+                ) FROM tasks t
+                WHERE t.assigned_to = %s
+            """,
+                (
+                    session.get("username"),
+                    session.get("user_id"),
+                ),
+            )
+            result = cursor.fetchone()[0]
 
     return jsonify(result if result else [])
 
@@ -382,6 +428,7 @@ def events():
             """
         )
         events = cursor.fetchall()
+        print()
     return render_template("events.html", events=events)
 
 
@@ -395,25 +442,25 @@ def request_event():
 
     if not all([event_name, event_description, event_date_str, requested_by]):
         logger.info("Missing required fields for event request")
-        return jsonify(error="Missing required fields."), 400
+        flash("Missing required fields.", "error")
 
     try:
         event_date = datetime.strptime(event_date_str, "%Y-%m-%d").date()
     except ValueError:
         logger.info("Invalid date format for event request")
-        return jsonify(error="Invalid date format. Please use YYYY-MM-DD."), 400
+        flash("Invalid date format. Please use YYYY-MM-DD.", "error")
 
     if event_date < datetime.now().date():
         logger.info("Event date cannot be in the past for event request.")
-        return jsonify(error="Event date cannot be in the past."), 400
+        flash("Event date cannot be in the past.", "error")
 
     if len(event_name) > 255:
         logger.info("Event name too long for event request.")
-        return jsonify(error="Event name is too long (maximum 255 characters)."), 400
+        flash("Event name is too long (maximum 255 characters).", "error")
 
     if len(event_description) > 512:
         logger.info("Event description too long for event request.")
-        return jsonify(error="Event description is too long (maximum 512 characters)."), 400
+        flash("Event description is too long (maximum 512 characters).", "error")
 
     db = get_db()
     with db.cursor() as cursor:
@@ -446,6 +493,46 @@ def approve_event(event_id):
         db.commit()
     logger.info("Event approved successfully")
     return jsonify(success=True), 200
+
+
+@app.route("/api/tasks/<int:task_id>", methods=["PATCH"])
+@login_required
+def complete_task(task_id):
+    if not task_id:
+        logger.info("Task ID not provided")
+        return jsonify(error="Task ID not provided."), 400
+
+    db = get_db()
+    status = "Completed"
+    with db.cursor(cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(
+            "SELECT deadline FROM tasks WHERE task_id = %s AND assigned_to = %s",
+            (task_id, session["user_id"]),
+        )
+        result = cursor.fetchone()
+        if not result:
+            logger.info(f"Task ID {task_id} not found or not assigned to user.")
+            return jsonify(error="Task not found or not assigned to you."), 404
+        print(result)
+        if result["deadline"] < datetime.now().date():
+            logger.info(f"Task ID {task_id} deadline has passed.")
+            status = "Failed"
+            logger.info("Task deadline has passed.")
+    with db.cursor() as cursor:
+        cursor.execute(
+            "UPDATE tasks SET status = %s WHERE task_id = %s",
+            (
+                status,
+                task_id,
+            ),
+        )
+        db.commit()
+    if status == "Completed":
+        logger.info(f"Task {task_id} marked as Completed successfully.")
+        return jsonify(success=True), 200
+    else:
+        logger.info(f"Task {task_id} marked as Failed because deadline passed.")
+        return jsonify(error="Task deadline has passed."), 400
 
 
 @app.route("/api/events", methods=["GET"])

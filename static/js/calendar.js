@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let eventApprovedby = document.createElement("div");
             eventApprovedby.classList.add("fc-event-approvedby");
             eventApprovedby.id = arg.event.extendedProps.event_id;
+
             eventApprovedby.innerText = arg.event.extendedProps.approved_by_username
                 ? "Approved by: " + arg.event.extendedProps.approved_by_username
                 : "Pending approval";
