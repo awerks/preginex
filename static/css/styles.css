@@ -1939,6 +1939,14 @@ textarea {
     }
 }
 
+@media screen and (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
 @media screen and (min-width:768px) {
     .faq-and-info {
         grid-template-columns: 3fr 1fr;
