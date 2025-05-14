@@ -106,8 +106,7 @@
                         errorEl.innerText = "Username already exists";
                         errorEl.style.color = "red";
                     } else {
-                        errorEl.innerText = "Username is available";
-                        errorEl.style.color = "green";
+                        errorEl.style.display = "none";
                     }
                 });
         });
@@ -144,8 +143,13 @@
             const emailError = document.getElementById("email-error");
             const usernameError = document.getElementById("username-error");
             const birthday = document.getElementById("birthday_date").value;
+            const passwordError = document.getElementById("password-error");
             const today = new Date();
-            if (emailError.style.display === "block" || usernameError.style.display === "block") {
+            if (
+                emailError.style.display === "block" ||
+                usernameError.style.display === "block" ||
+                passwordError.style.display === "block"
+            ) {
                 event.preventDefault();
                 toast("Please fix the errors before submitting.", "error");
             }
