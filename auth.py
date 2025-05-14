@@ -227,14 +227,14 @@ def resend_confirmation():
 
 @auth_bp.route("/check_confirmation", methods=["GET"])
 def check_confirmation():
-    # if "user_id" not in session:
-    #     return redirect(url_for("login"))
-    # user_id = session["user_id"]
-    # db = get_db()
-    # with db.cursor() as cursor:
-    #     cursor.execute("SELECT confirmed FROM users WHERE user_id = %s", (user_id,))
-    #     success = cursor.fetchone()[0]
-    return jsonify({"success": True})
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute("SELECT confirmed FROM users WHERE user_id = %s", (user_id,))
+        success = cursor.fetchone()[0]
+    return jsonify({"success": success})
 
 
 @auth_bp.route("/forgot_password", methods=["GET", "POST"])
