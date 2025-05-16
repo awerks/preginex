@@ -1,57 +1,19 @@
-{% extends 'base.html' %} {% block title %}About - ProjeX{% endblock %}
+{% extends 'base.html' %} {% block title %}About - Preginex{% endblock %}
 {% block content %}
     <section class="about-container">
-        <h1>About ProjeX</h1>
-        <p>Welcome to ProjeX, your favourite platform for organizing campus events and managing tasks</p>
+        <h1>About Preginex</h1>
+        <p>Welcome to Preginex, your favourite platform for organizing campus events and managing tasks</p>
 
-        <h2>Our Mission</h2>
-        <p>We look forward to being the best Project management tool!</p>
-
-        <h2>Meet the Team</h2>
+        <h2>Developer</h2>
         <div class="team-section">
             <div class="team-member">
-                <img src="https://picsum.photos/seed/member1/400" alt="Team Member 1" width="400" height="400" />
-                <h3>Illia Shust</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member2/400" alt="Team Member 2" width="400" height="400" />
-                <h3>Cristofer Pablo</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member3/400" alt="Team Member 3" width="400" height="400" />
-                <h3>Bogdan Cprljakovic</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member4/400" alt="Team Member 4" width="400" height="400" />
-                <h3>Alex Serg</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member5/400" alt="Team Member 5" width="400" height="400" />
-                <h3>Zeynep Yurtsever</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member6/400" alt="Team Member 6" width="400" height="400" />
-                <h3>Alim Togayev</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member7/400" alt="Team Member 7" width="400" height="400" />
-                <h3>Azimjon Akhmadjonov</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member8/400" alt="Team Member 8" width="400" height="400" />
-                <h3>Hamid</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member9/400" alt="Team Member 9" width="400" height="400" />
-                <h3>Kinlo ET</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member10/400" alt="Team Member 10" width="400" height="400" />
-                <h3>Ben</h3>
-            </div>
-            <div class="team-member">
-                <img src="https://picsum.photos/seed/member11/400" alt="Team Member 11" width="400" height="400" />
-                <h3>Andrei Valean</h3>
+                <img
+                    src="{{ url_for('static', filename='images/team-member1.jpg') }}"
+                    alt="Team Member 1"
+                    width="640"
+                    height="640"
+                />
+                <h3>awerks</h3>
             </div>
         </div>
     </section>

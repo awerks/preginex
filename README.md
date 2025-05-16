@@ -31,7 +31,7 @@ if you sign in with google, you'll have worker's access rights for now.
 ### Clone the repository
 
 ```bash
-git clone https://github.com/avalean07/se_project_1000 && cd se_project_1000
+git clone https://github.com/awerks/preginex && cd preginex
 ```
 
 ### Create a virtual environment
