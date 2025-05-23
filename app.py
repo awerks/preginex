@@ -11,6 +11,7 @@ from sys import stdout
 from werkzeug.middleware.proxy_fix import ProxyFix
 from sentry_sdk.integrations.flask import FlaskIntegration
 from utils import send_email, cache_static
+from flask_caching import Cache
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
@@ -18,6 +19,7 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev")
 app.jinja_env.globals["now"] = datetime.now
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+
 
 if not app.debug:
     sentry_sdk.init(dsn=os.environ.get("SENTRY_SDK"), integrations=[FlaskIntegration()])
@@ -37,6 +39,37 @@ logging.basicConfig(
     ],
 )
 logger.info("Logging setup complete.")
+config = {
+    "CACHE_TYPE": "RedisCache",
+    "CACHE_REDIS_URL": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+    "CACHE_KEY_PREFIX": "awerks_",
+    "CACHE_DEFAULT_TIMEOUT": 60,
+}
+app.config.from_mapping(config)
+cache = Cache(app)
+
+
+def user_cache(timeout=60, base_key="view"):
+    def decorator(view_func):
+        key_prefix = lambda: f"{base_key}/{session.get('user_id', 'anon')}"  # noqa: E731
+        return cache.cached(timeout=timeout, key_prefix=key_prefix)(view_func)
+
+    return decorator
+
+
+def cache_delete_projects_tasks():
+    user_id = session.get("user_id")
+    cache.delete(f"projects-html/{user_id}")
+    cache.delete(f"projects-json/{user_id}")
+    cache.delete(f"tasks-html/{user_id}")
+    cache.delete(f"tasks-json/{user_id}")
+    cache.delete(f"analysis-html/{user_id}")
+
+
+def cache_delete_events():
+    user_id = session.get("user_id")
+    cache.delete(f"events-html/{user_id}")
+    cache.delete(f"events-json/{user_id}")
 
 
 @app.route("/")
@@ -123,8 +156,8 @@ def google_login():
 @app.route("/projects", methods=["GET"])
 @login_required
 @admin_or_manager_required
+@user_cache(base_key="projects-html")
 def projects():
-
     db = get_db()
     with db.cursor(cursor_factory=RealDictCursor) as cursor:
         cursor.execute("SELECT * FROM projects")
@@ -179,6 +212,7 @@ def create_project():
         )
         db.commit()
     logger.info("Project created successfully")
+    cache_delete_projects_tasks()
     return redirect(url_for("projects"))
 
 
@@ -197,6 +231,7 @@ def delete_project():
         cursor.execute("DELETE FROM projects WHERE project_id = %s", (project_id,))
         db.commit()
     logger.info(f"Project with ID {project_id} deleted successfully")
+    cache_delete_projects_tasks()
     return jsonify(success=True), 200
 
 
@@ -229,10 +264,12 @@ def edit_project():
         )
         db.commit()
     logger.info(f"Project with ID {project_id} edited successfully")
+    cache_delete_projects_tasks()
     return jsonify(success=True), 200
 
 
 @app.route("/tasks", methods=["GET"])
+@user_cache(base_key="tasks-html")
 @login_required
 def tasks():
     db = get_db()
@@ -243,6 +280,7 @@ def tasks():
         projects = cursor.fetchall()
         cursor.execute("SELECT * FROM users where role_name = 'Worker'")
         workers = cursor.fetchall()
+
     return render_template(
         "tasks.html",
         tasks=tasks,
@@ -298,6 +336,7 @@ def create_task():
             )
             db.commit()
         logger.info("Task created successfully")
+        cache_delete_projects_tasks()
         with db.cursor() as cursor:
             cursor.execute("SELECT email FROM users WHERE user_id = %s", (assigned_to,))
             assigned_to_email = cursor.fetchone()
@@ -333,10 +372,12 @@ def delete_task(task_id):
         cursor.execute("DELETE FROM tasks WHERE task_id = %s", (task_id,))
         db.commit()
     logger.info(f"Task with ID {task_id} deleted successfully")
+    cache_delete_projects_tasks()
     return jsonify(success=True), 200
 
 
 @app.route("/api/projects", methods=["GET"])
+@user_cache(base_key="projects-json")
 @login_required
 @admin_or_manager_required
 def get_projects():
@@ -377,6 +418,7 @@ def get_projects():
 
 
 @app.route("/api/tasks", methods=["GET"])
+@user_cache(base_key="tasks-json")
 @login_required
 def get_tasks():
     db = get_db()
@@ -429,6 +471,7 @@ def get_tasks():
 
 
 @app.route("/events", methods=["GET"])
+@user_cache(base_key="events-html")
 @login_required
 def events():
     db = get_db()
@@ -490,6 +533,7 @@ def request_event():
         )
         db.commit()
     logger.info(f"Event '{event_name}' requested successfully by user_id: {requested_by}")
+    cache_delete_events()
     return redirect(url_for("events"))
 
 
@@ -512,6 +556,7 @@ def approve_event(event_id):
         )
         db.commit()
     logger.info("Event approved successfully")
+    cache_delete_events()
     return jsonify(success=True), 200
 
 
@@ -533,7 +578,6 @@ def complete_task(task_id):
         if not result:
             logger.info(f"Task ID {task_id} not found or not assigned to user.")
             return jsonify(error="Task not found or not assigned to you."), 404
-        print(result)
         if result["deadline"] < datetime.now().date():
             logger.info(f"Task ID {task_id} deadline has passed.")
             status = "Failed"
@@ -549,13 +593,16 @@ def complete_task(task_id):
         db.commit()
     if status == "Completed":
         logger.info(f"Task {task_id} marked as Completed successfully.")
+        cache_delete_projects_tasks()
         return jsonify(success=True), 200
+
     else:
         logger.info(f"Task {task_id} marked as Failed because deadline passed.")
         return jsonify(error="Task deadline has passed."), 400
 
 
 @app.route("/api/events", methods=["GET"])
+@user_cache(base_key="events-json")
 @login_required
 def get_events():
     db = get_db()
@@ -581,6 +628,7 @@ def get_events():
 
 
 @app.route("/analysis", methods=["GET"])
+@user_cache(base_key="analysis-html")
 @login_required
 @admin_or_manager_required
 def analysis():

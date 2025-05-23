@@ -7,4 +7,6 @@ MarkupSafe
 Werkzeug
 flask-dance
 psycopg2
+Flask-Caching
 sentry-sdk[flask]
+redis
