@@ -49,7 +49,7 @@ app.config.from_mapping(config)
 cache = Cache(app)
 
 
-def user_cache(timeout=60, base_key="view"):
+def user_cache(timeout=86400, base_key="view"):
     def decorator(view_func):
         key_prefix = lambda: f"{base_key}/{session.get('user_id', 'anon')}"  # noqa: E731
         return cache.cached(timeout=timeout, key_prefix=key_prefix)(view_func)
