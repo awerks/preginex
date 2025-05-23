@@ -4,6 +4,8 @@ import threading
 import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from functools import wraps
+from flask import make_response
 
 logger = logging.getLogger(__name__)
 if not logger.handlers:
@@ -11,6 +13,16 @@ if not logger.handlers:
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+
+
+def cache_static(view_func):
+    @wraps(view_func)
+    def wrapper(*args, **kwargs):
+        response = make_response(view_func(*args, **kwargs))
+        response.cache_control.max_age = 3600
+        return response
+
+    return wrapper
 
 
 def run_in_thread(func, *args, **kwargs):

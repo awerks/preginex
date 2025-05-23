@@ -1,7 +1,7 @@
 import logging
 import os
 import sentry_sdk
-from datetime import date, datetime
+from datetime import datetime
 from flask import Flask, flash, jsonify, render_template, redirect, url_for, session, request
 from auth import auth_bp, login_required, admin_or_manager_required, google_bp
 from db import close_db, get_db
@@ -10,7 +10,7 @@ from flask_dance.contrib.google import google
 from sys import stdout
 from werkzeug.middleware.proxy_fix import ProxyFix
 from sentry_sdk.integrations.flask import FlaskIntegration
-from utils import send_email
+from utils import send_email, cache_static
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
@@ -40,8 +40,8 @@ logger.info("Logging setup complete.")
 
 
 @app.route("/")
+@cache_static
 def index():
-
     user = session.get("name")
     if not user and session.get("username"):
         user = session["username"].split("@")[0]
@@ -134,6 +134,7 @@ def projects():
 
 
 @app.route("/privacy", methods=["GET"])
+@cache_static
 def privacy():
     return render_template("privacy_policy.html")
 
@@ -641,6 +642,7 @@ def analysis():
 
 
 @app.route("/about", methods=["GET"])
+@cache_static
 def about():
     return render_template("about.html")
 
