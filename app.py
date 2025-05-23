@@ -59,17 +59,20 @@ def user_cache(timeout=60, base_key="view"):
 
 def cache_delete_projects_tasks():
     user_id = session.get("user_id")
-    cache.delete(f"projects-html/{user_id}")
-    cache.delete(f"projects-json/{user_id}")
-    cache.delete(f"tasks-html/{user_id}")
-    cache.delete(f"tasks-json/{user_id}")
-    cache.delete(f"analysis-html/{user_id}")
+    for key in [
+        "projects-html",
+        "projects-json",
+        "tasks-html",
+        "tasks-json",
+        "analysis-html",
+    ]:
+        cache.delete(f"{key}/{user_id}")
 
 
 def cache_delete_events():
     user_id = session.get("user_id")
-    cache.delete(f"events-html/{user_id}")
-    cache.delete(f"events-json/{user_id}")
+    for key in ["events-html", "events-json"]:
+        cache.delete(f"{key}/{user_id}")
 
 
 @app.route("/")
