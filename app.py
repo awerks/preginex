@@ -2,7 +2,16 @@ import logging
 import os
 import sentry_sdk
 from datetime import datetime
-from flask import Flask, flash, jsonify, render_template, redirect, url_for, session, request
+from flask import (
+    Flask,
+    flash,
+    jsonify,
+    render_template,
+    redirect,
+    url_for,
+    session,
+    request,
+)
 from auth import auth_bp, login_required, admin_or_manager_required, google_bp
 from db import close_db, get_db
 from psycopg2.extras import RealDictCursor
@@ -87,7 +96,8 @@ def index():
 @app.route("/google_login")
 def google_login():
     resp = google.get(
-        "https://people.googleapis.com/v1/people/me", params={"personFields": "birthdays,names,emailAddresses,photos"}
+        "https://people.googleapis.com/v1/people/me",
+        params={"personFields": "birthdays,names,emailAddresses,photos"},
     )
     if resp.ok:
         user_info = resp.json()
@@ -123,7 +133,10 @@ def google_login():
 
         db = get_db()
         with db.cursor() as cursor:
-            cursor.execute("SELECT user_id, role_name, second_name FROM users WHERE email = %s", (email,))
+            cursor.execute(
+                "SELECT user_id, role_name, second_name FROM users WHERE email = %s",
+                (email,),
+            )
             user_row = cursor.fetchone()
             if user_row:
                 user_id, role_name, second_name = user_row
@@ -136,7 +149,16 @@ def google_login():
                     VALUES (%s, %s, %s, %s, %s, %s,%s, %s)
                     ON CONFLICT (username) DO NOTHING RETURNING user_id
                     """,
-                    (username, email, "google_authorised", "Worker", first_name, last_name, birthday_str, True),
+                    (
+                        username,
+                        email,
+                        "google_authorised",
+                        "Worker",
+                        first_name,
+                        last_name,
+                        birthday_str,
+                        True,
+                    ),
                 )
                 db.commit()
                 user_id = cursor.fetchone()[0]
@@ -185,7 +207,6 @@ def log_ip():
 @login_required
 @admin_or_manager_required
 def create_project():
-
     project_name = request.form.get("project_name")
     description = request.form.get("description")
     start_date_str = request.form.get("start_date")
@@ -223,7 +244,6 @@ def create_project():
 @login_required
 @admin_or_manager_required
 def delete_project():
-
     db = get_db()
     project_id = request.get_json().get("project_id")
     if not project_id:
@@ -242,7 +262,6 @@ def delete_project():
 @login_required
 @admin_or_manager_required
 def edit_project():
-
     json_data = request.get_json() or {}
     if not json_data:
         logger.info("No JSON data provided for project edit")
@@ -277,7 +296,9 @@ def edit_project():
 def tasks():
     db = get_db()
     with db.cursor(cursor_factory=RealDictCursor) as cursor:
-        cursor.execute("SELECT * FROM tasks where assigned_to = %s", (session["user_id"],))
+        cursor.execute(
+            "SELECT * FROM tasks where assigned_to = %s", (session["user_id"],)
+        )
         tasks = cursor.fetchall()
         cursor.execute("SELECT * FROM projects")
         projects = cursor.fetchall()
@@ -296,7 +317,6 @@ def tasks():
 @login_required
 @admin_or_manager_required
 def create_task():
-
     if request.method == "POST":
         task_name = request.form.get("task_name")
         task_description = request.form.get("task_description")
@@ -304,7 +324,9 @@ def create_task():
         assigned_to_str = request.form.get("assigned_to")
         project_id_str = request.form.get("project_id")
 
-        if not all([task_name, task_description, deadline_str, assigned_to_str, project_id_str]):
+        if not all(
+            [task_name, task_description, deadline_str, assigned_to_str, project_id_str]
+        ):
             logger.info("Missing required fields for task creation")
             flash("Missing required fields.", "error")
 
@@ -321,14 +343,22 @@ def create_task():
             flash("Deadline cannot be in the past.", "error")
         db = get_db()
         with db.cursor() as cursor:
-            cursor.execute("SELECT project_id FROM projects WHERE project_id = %s", (project_id,))
+            cursor.execute(
+                "SELECT project_id FROM projects WHERE project_id = %s", (project_id,)
+            )
             if cursor.fetchone() is None:
-                logger.info(f"Attempted to create task for non-existent project_id: {project_id}")
+                logger.info(
+                    f"Attempted to create task for non-existent project_id: {project_id}"
+                )
                 flash("Project does not exist.", "error")
 
-            cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (assigned_to,))
+            cursor.execute(
+                "SELECT user_id FROM users WHERE user_id = %s", (assigned_to,)
+            )
             if cursor.fetchone() is None:
-                logger.info(f"Attempted to assign task to non-existent user_id: {assigned_to}")
+                logger.info(
+                    f"Attempted to assign task to non-existent user_id: {assigned_to}"
+                )
                 flash("User does not exist.", "error")
 
         db = get_db()
@@ -535,7 +565,9 @@ def request_event():
             (event_name, event_description, event_date, requested_by),
         )
         db.commit()
-    logger.info(f"Event '{event_name}' requested successfully by user_id: {requested_by}")
+    logger.info(
+        f"Event '{event_name}' requested successfully by user_id: {requested_by}"
+    )
     cache_delete_events()
     return redirect(url_for("events"))
 
@@ -544,7 +576,6 @@ def request_event():
 @login_required
 @admin_or_manager_required
 def approve_event(event_id):
-
     if not event_id:
         logger.info("Event ID not provided")
         return jsonify(error="Event ID not provided."), 400
@@ -635,11 +666,9 @@ def get_events():
 @login_required
 @admin_or_manager_required
 def analysis():
-
     db = get_db()
     projects_data = []
     with db.cursor(cursor_factory=RealDictCursor) as cursor:
-
         cursor.execute(
             """
             SELECT p.project_id, p.project_name, p.start_date, p.end_date,

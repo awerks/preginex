@@ -1,5 +1,6 @@
-import psycopg2
 import os
+
+import psycopg2
 
 DATABASE_PUBLIC_URL = os.getenv("DATABASE_PUBLIC_URL")
 
@@ -12,7 +13,6 @@ try:
     with open(schema_path, "r") as f:
         print("Executing schema.sql...")
         try:
-
             cursor.execute(f.read())
             conn.commit()
         except psycopg2.Error as e:

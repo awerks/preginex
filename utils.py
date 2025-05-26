@@ -48,6 +48,9 @@ def _send_email_sync(to_address, subject, html_body):
     html_part = MIMEText(html_body, "html")
     message.attach(text_part)
     message.attach(html_part)
+    if not all([smtp_server, smtp_port, smtp_username, smtp_password, from_address]):
+        logger.error("Missing SMTP configuration parameters.")
+        return
     with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=5) as server:
         server.login(smtp_username, smtp_password)
         server.sendmail(from_address, to_address, message.as_string())
